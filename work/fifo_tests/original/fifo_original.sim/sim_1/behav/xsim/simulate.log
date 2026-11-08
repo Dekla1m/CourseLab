@@ -1,0 +1,3 @@
+Time resolution is 1 ps
+REPRODUCED ORIGINAL BUG: wrote 64 words with read clock stopped, full=0 (expected 1)
+$finish called at time : 711 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo_original.v" Line 24

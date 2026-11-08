@@ -1,0 +1,1 @@
+--relax --debug "typical" --mt "2" "xil_defaultlib.tb" -s "l_counter_snapshot" -log "xelab.log" 

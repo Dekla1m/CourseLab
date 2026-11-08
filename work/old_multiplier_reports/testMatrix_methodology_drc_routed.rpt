@@ -1,0 +1,188 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
+| Date         : Wed Oct 14 23:20:03 2026
+| Host         : kulebyaka running 64-bit major release  (build 9200)
+| Command      : report_methodology -file testMatrix_methodology_drc_routed.rpt -pb testMatrix_methodology_drc_routed.pb -rpx testMatrix_methodology_drc_routed.rpx
+| Design       : testMatrix
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Fully Routed
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max violations: <unlimited>
+             Violations found: 24
++-----------+----------+------------------------------------------+------------+
+| Rule      | Severity | Description                              | Violations |
++-----------+----------+------------------------------------------+------------+
+| TIMING-16 | Warning  | Large setup violation                    | 8          |
+| XDCH-2    | Warning  | Same min and max delay values on IO port | 16         |
++-----------+----------+------------------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+TIMING-16#1 Warning
+Large setup violation  
+There is a large setup violation of -4.438 ns between y_reg[7]/C (clocked by clk) and y[7] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#2 Warning
+Large setup violation  
+There is a large setup violation of -4.443 ns between y_reg[5]/C (clocked by clk) and y[5] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#3 Warning
+Large setup violation  
+There is a large setup violation of -4.447 ns between y_reg[6]/C (clocked by clk) and y[6] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#4 Warning
+Large setup violation  
+There is a large setup violation of -4.453 ns between y_reg[4]/C (clocked by clk) and y[4] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#5 Warning
+Large setup violation  
+There is a large setup violation of -4.458 ns between y_reg[3]/C (clocked by clk) and y[3] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#6 Warning
+Large setup violation  
+There is a large setup violation of -4.465 ns between y_reg[1]/C (clocked by clk) and y[1] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#7 Warning
+Large setup violation  
+There is a large setup violation of -4.473 ns between y_reg[2]/C (clocked by clk) and y[2] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+TIMING-16#8 Warning
+Large setup violation  
+There is a large setup violation of -4.474 ns between y_reg[0]/C (clocked by clk) and y[0] (clocked by clk). Large setup violations at the end of those stages might be difficult to fix during the post-placement implementation flow and could be the result of non-optimal XDC constraints or non-optimal design architecture
+Related violations: <none>
+
+XDCH-2#1 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[0]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#2 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[1]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#3 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[2]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#4 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[3]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#5 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[4]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#6 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[5]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#7 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[6]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#8 Warning
+Same min and max delay values on IO port  
+The same input delay of 0.000 ns has been defined on port 'a[7]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_input_delay -clock clk -min 0.000 [get_ports {a[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 7)
+Related violations: <none>
+
+XDCH-2#9 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[0]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#10 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[1]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#11 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[2]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#12 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[3]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#13 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[4]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#14 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[5]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#15 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[6]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+XDCH-2#16 Warning
+Same min and max delay values on IO port  
+The same output delay of 0.000 ns has been defined on port 'y[7]' relative to clock clk for both max and min. Make sure this reflects the design intent.
+set_output_delay -clock clk -min 0.000 [get_ports {y[*]}]
+C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/constrs_1/new/constraints.xdc (Line: 11)
+Related violations: <none>
+
+

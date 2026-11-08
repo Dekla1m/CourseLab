@@ -1,0 +1,124 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Oct 19 17:07:26 2026
+# Process ID: 23680
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab
+# Command line: vivado.exe -mode batch -source work\check_uart.tcl -log work\check_uart.log -journal work\check_uart.jou
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/check_uart.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab\work\check_uart.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+CRITICAL WARNING: [Common 17-741] No write access right to the local Tcl store at 'C'. XilinxTclStore is reverted to the installation area. If you want to use local Tcl Store, please change the access right and relaunch Vivado.
+source {work\check_uart.tcl}
+# set root [file normalize [file join [file dirname [info script]] ..]]
+# open_project [file join $root CourseLab.xpr]
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+open_project: Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 400.883 ; gain = 84.801
+# launch_simulation -simset sim_uart -mode behavioral
+Command: launch_simulation  -simset sim_uart -mode behavioral
+INFO: [Vivado 12-12493] Simulation top is 'tb_kuz_uart'
+WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
+WARNING: [Vivado 12-13277] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_uart/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_uart'
+INFO: [SIM-utils-72] Using boost library from 'C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_kuz_uart' in fileset 'sim_uart'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_uart'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_uart/behav/xsim'
+"xvlog --incr --relax -prj tb_kuz_uart_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_ASCII_TO_HEX.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_ASCII_TO_HEX
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_CLK_DIVIDER.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_CLK_DIVIDER
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_COUNTER_SAMP_RX.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_COUNTER_SAMP_RX
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_COUNTER_SAMP_TX.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_COUNTER_SAMP_TX
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_HEX_TO_ASCII.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_HEX_TO_ASCII
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_RX_FSM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_RX_FSM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_SYNCHR.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_SYNCHR
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_TX_FSM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_TX_FSM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_UART.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module KM_UART
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/kuz_uart_packet.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kuz_uart_packet
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/kuz_uart_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kuz_uart_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_uart/new/tb_kuz_uart.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_kuz_uart
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_uart/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [USF-XSim-69] 'compile' step finished in '3' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_uart/behav/xsim'
+"xelab --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_kuz_uart_behav xil_defaultlib.tb_kuz_uart xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_kuz_uart_behav xil_defaultlib.tb_kuz_uart xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.KM_SYNCHR
+Compiling module xil_defaultlib.KM_CLK_DIVIDER(count_divide=4)
+Compiling module xil_defaultlib.KM_COUNTER_SAMP_RX
+Compiling module xil_defaultlib.KM_RX_FSM
+Compiling module xil_defaultlib.KM_COUNTER_SAMP_TX
+Compiling module xil_defaultlib.KM_TX_FSM
+Compiling module xil_defaultlib.KM_UART(DIV_VALUE=4)
+Compiling module xil_defaultlib.KM_ASCII_TO_HEX
+Compiling module xil_defaultlib.KM_HEX_TO_ASCII
+Compiling module xil_defaultlib.kuz_uart_packet
+Compiling module xil_defaultlib.kuz_uart_top(UART_DIV_VALUE=4)
+Compiling module xil_defaultlib.tb_kuz_uart
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_kuz_uart_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '3' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_uart/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "tb_kuz_uart_behav -key {Behavioral:sim_uart:Functional:tb_kuz_uart} -tclbatch {tb_kuz_uart.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+source tb_kuz_uart.tcl
+## current_wave_config
+PASS response 1 (110 bytes)
+PASS response 2 (110 bytes)
+PASS response 3 (5 bytes)
+PASS response 4 (5 bytes)
+PASS response 5 (5 bytes)
+PASS response 6 (5 bytes)
+PASS response 7 (5 bytes)
+PASS response 8 (5 bytes)
+PASS response 9 (5 bytes)
+PASS response 10 (110 bytes)
+ALL PASS: 10 serial transactions, key/value width, byte order, errors and reset
+$finish called at time : 2999645 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_uart/new/tb_kuz_uart.v" Line 154
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'tb_kuz_uart_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for all
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:10 . Memory (MB): peak = 423.152 ; gain = 22.270
+# close_sim
+INFO: [Simtcl 6-16] Simulation closed
+# launch_runs synth_uart -jobs 2
+WARNING: [Vivado 12-7122] Auto Incremental Compile:: No reference checkpoint was found in run synth_uart. Auto-incremental flow will not be run, the standard flow will be run instead.
+[Mon Oct 19 17:07:44 2026] Launched synth_uart...
+Run output will be captured here: C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.runs/synth_uart/runme.log
+# wait_on_run synth_uart
+[Mon Oct 19 17:07:44 2026] Waiting for synth_uart to finish...
+
+*** Running vivado
+    with args -log kuz_uart_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source kuz_uart_top.tcl
+

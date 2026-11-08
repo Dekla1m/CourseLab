@@ -1,0 +1,173 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Oct 19 17:17:40 2026
+# Process ID: 5644
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab
+# Command line: vivado.exe -mode batch -source work\check_fifo.tcl -log work\check_fifo.log -journal work\check_fifo.jou
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/check_fifo.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab\work\check_fifo.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+CRITICAL WARNING: [Common 17-741] No write access right to the local Tcl store at 'C'. XilinxTclStore is reverted to the installation area. If you want to use local Tcl Store, please change the access right and relaunch Vivado.
+source {work\check_fifo.tcl}
+# set root [file normalize [file join [file dirname [info script]] ..]]
+# set tests [file join $root work fifo_tests]
+# create_project -force fifo_original [file join $tests original] -part xc7a100tcsg324-1
+create_project: Time (s): cpu = 00:00:03 ; elapsed = 00:00:08 . Memory (MB): peak = 378.625 ; gain = 63.922
+# add_files [file join $tests FIFO_original.v]
+# add_files -fileset sim_1 [file join $root CourseLab.srcs sim_fifo new tb_fifo_original.v]
+# set_property top tb_fifo_original [get_filesets sim_1]
+# set_property xsim.simulate.runtime all [get_filesets sim_1]
+# launch_simulation -mode behavioral
+Command: launch_simulation  -mode behavioral
+INFO: [Vivado 12-12493] Simulation top is 'tb_fifo_original'
+WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
+WARNING: [Vivado 12-13277] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/original/fifo_original.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-72] Using boost library from 'C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_fifo_original' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/original/fifo_original.sim/sim_1/behav/xsim'
+"xvlog --incr --relax -prj tb_fifo_original_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/FIFO_original.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module FIFO
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo_original.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_fifo_original
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/original/fifo_original.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/original/fifo_original.sim/sim_1/behav/xsim'
+"xelab --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_fifo_original_behav xil_defaultlib.tb_fifo_original xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_fifo_original_behav xil_defaultlib.tb_fifo_original xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/FIFO_original.v" Line 1. Module FIFO_default doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/FIFO_original.v" Line 1. Module FIFO_default doesn't have a timescale but at least one module in design has a timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.FIFO_default
+Compiling module xil_defaultlib.tb_fifo_original
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_fifo_original_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/work/fifo_tests/original/fifo_original.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "tb_fifo_original_behav -key {Behavioral:sim_1:Functional:tb_fifo_original} -tclbatch {tb_fifo_original.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+source tb_fifo_original.tcl
+## current_wave_config
+REPRODUCED ORIGINAL BUG: wrote 64 words with read clock stopped, full=0 (expected 1)
+$finish called at time : 711 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo_original.v" Line 24
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'tb_fifo_original_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for all
+launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 418.172 ; gain = 39.547
+# close_sim
+INFO: [Simtcl 6-16] Simulation closed
+# set f [open [file join $tests original fifo_original.sim sim_1 behav xsim simulate.log] r]
+# set original_log [read $f]
+# close $f
+# if {[string first "REPRODUCED ORIGINAL BUG" $original_log] < 0} {error "Original bug not reproduced"}
+# close_project
+# open_project [file join $root CourseLab.xpr]
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.gen/sources_uart'.
+Scanning sources...
+Finished scanning sources
+# set fifo [file join $root CourseLab.srcs sources_1 new FIFO.v]
+# add_files -norecurse -fileset sources_1 $fifo
+# add_files -norecurse -fileset sources_uart $fifo
+# if {[llength [get_filesets -quiet sim_fifo]] == 0} {create_fileset -simset sim_fifo}
+# set_property SOURCE_SET sources_uart [get_filesets sim_fifo]
+# add_files -fileset sim_fifo [file join $root CourseLab.srcs sim_fifo new tb_fifo.sv]
+# set_property top tb_fifo [get_filesets sim_fifo]
+# set_property top_auto_set false [get_filesets sim_fifo]
+# set_property xsim.simulate.runtime all [get_filesets sim_fifo]
+# update_compile_order -fileset sim_fifo
+# launch_simulation -simset sim_fifo -mode behavioral
+Command: launch_simulation  -simset sim_fifo -mode behavioral
+INFO: [Vivado 12-12493] Simulation top is 'tb_fifo'
+WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
+WARNING: [Vivado 12-13277] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_fifo/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_fifo'
+INFO: [SIM-utils-72] Using boost library from 'C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_fifo' in fileset 'sim_fifo'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_fifo'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_fifo/behav/xsim'
+"xvlog --incr --relax -L uvm -prj tb_fifo_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_1/new/FIFO.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module FIFO
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo_case
+WARNING: [VRFC 10-8426] non-net output port 'finished' cannot be initialized at declaration in SystemVerilog mode [C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo.sv:4]
+INFO: [VRFC 10-311] analyzing module tb_fifo
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_fifo/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_fifo/behav/xsim'
+"xelab --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_fifo_behav xil_defaultlib.tb_fifo xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_fifo_behav xil_defaultlib.tb_fifo xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.FIFO_default
+Compiling module xil_defaultlib.fifo_case
+Compiling module xil_defaultlib.FIFO(WORD_SIZE=10,FIFO_DEPTH=16)
+Compiling module xil_defaultlib.fifo_case(WIDTH=10,DEPTH=16,WR_H...
+Compiling module xil_defaultlib.FIFO(WORD_SIZE=32,FIFO_DEPTH=4)
+Compiling module xil_defaultlib.fifo_case(WIDTH=32,DEPTH=4,WR_HA...
+Compiling module xil_defaultlib.FIFO(WORD_SIZE=1,FIFO_DEPTH=2)
+Compiling module xil_defaultlib.fifo_case(WIDTH=1,DEPTH=2,RD_HAL...
+Compiling module xil_defaultlib.tb_fifo
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_fifo_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '4' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_fifo/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "tb_fifo_behav -key {Behavioral:sim_uart:Functional:tb_fifo} -tclbatch {tb_fifo.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+source tb_fifo.tcl
+## current_wave_config
+PASS FIFO case 3: width=1 depth=2 clocks=10/10 ns writes=652 reads=650
+PASS FIFO case 1: width=10 depth=16 clocks=14/6 ns writes=1153 reads=1137
+PASS FIFO case 2: width=32 depth=4 clocks=6/22 ns writes=466 reads=462
+PASS FIFO case 0: width=8 depth=64 clocks=10/14 ns writes=2014 reads=1950
+ALL PASS: FIFO directed and randomized tests, four configurations
+$finish called at time : 76113 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_fifo/new/tb_fifo.sv" Line 158
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'tb_fifo_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for all
+launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:09 . Memory (MB): peak = 418.172 ; gain = 0.000
+# close_sim
+INFO: [Simtcl 6-16] Simulation closed
+# set f [open [file join $root CourseLab.sim sim_fifo behav xsim simulate.log] r]
+# set fixed_log [read $f]
+# close $f
+# current_fileset -simset [get_filesets sim_uart]
+# close_project
+# if {[string first "ALL PASS: FIFO directed and randomized tests" $fixed_log] < 0} {error "Fixed FIFO test failed"}
+# puts "FIFO_CHECK_SUCCESS: original failure reproduced; corrected FIFO passed all configurations"
+FIFO_CHECK_SUCCESS: original failure reproduced; corrected FIFO passed all configurations
+INFO: [Common 17-206] Exiting Vivado at Mon Oct 19 17:18:09 2026...

@@ -1,0 +1,27 @@
+#-----------------------------------------------------------
+# xsim v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Oct 19 18:41:33 2026
+# Process ID: 27316
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_matrix_round
+# Command line: xsim.exe -log matrix_round_sim.log -mode tcl -source {xsim.dir/matrix_round_snapshot/xsim_script.tcl}
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_matrix_round/matrix_round_sim.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_matrix_round\xsim.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source xsim.dir/matrix_round_snapshot/xsim_script.tcl
+# xsim {matrix_round_snapshot} -autoloadwcfg -tclbatch {../run_matrix_round_xsim.tcl}
+Time resolution is 1 ps
+source ../run_matrix_round_xsim.tcl
+## run all
+RFC FIRST F: A=c3d5fa01ebe36f7a9374427ad7ca8949 B=8899aabbccddeeff0011223344556677 cycles=1
+RFC KEYS after step 8: db31485315694343228d6aef8cc78c44 3d4553d8e9cfec6815ebadc40a9ffd04
+RFC KEYS after step 16: 57646468c44a5e28d3e59246f429f1ac bd079435165c6432b532e82834da581b
+RFC KEYS after step 24: 51e640757e8745de705727265a0098b1 5a7925017b9fdd3ed72a91a22286f984
+RFC KEYS after step 32: bb44e25378c73123a5f32f73cdb6e517 72e9dd7416bcf45b755dbaa88e4a4043
+RFC FIRST ENCRYPTION ROUND: e297b686e355b0a1cf4a2f9249140830 cycles=1
+ALL PASS: 553 F and LSX vectors; one cycle; key feedback, full encryption, all S inputs, stalls and reset
+$finish called at time : 2952600 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/new/tb_matrix_round.v" Line 82
+## quit
+INFO: [Common 17-206] Exiting xsim at Mon Oct 19 18:41:35 2026...

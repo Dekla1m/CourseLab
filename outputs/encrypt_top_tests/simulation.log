@@ -1,0 +1,47 @@
+#-----------------------------------------------------------
+# xsim v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Nov  2 18:33:26 2026
+# Process ID: 22884
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_encrypt_top
+# Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/encrypt_top_snapshot/xsim_script.tcl}
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_encrypt_top/simulation.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_encrypt_top\xsim.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source xsim.dir/encrypt_top_snapshot/xsim_script.tcl
+# xsim {encrypt_top_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+PASS: all 32 Ci and all out-of-range lookup indices
+PASS Encrypt_TOP block 0: ciphertext=7f679d90bebc24305a468d42b9d4edcd latency=35 periods from acceptance
+PASS Encrypt_TOP block 1: ciphertext=94bec15e269cf1e506f02b994c0a8ea0 latency=35 periods from acceptance
+PASS Encrypt_TOP block 2: ciphertext=98cc6b54dbcf7bd2f0800c1fab0677ef latency=35 periods from acceptance
+PASS Encrypt_TOP block 3: ciphertext=0e697e9f0587a38c908454ac39e1c463 latency=35 periods from acceptance
+PASS Encrypt_TOP block 4: ciphertext=2fa3a035eaf33cbb701b334d036224ea latency=35 periods from acceptance
+PASS Encrypt_TOP block 5: ciphertext=e51505fbdfa8ba6176ef2ca150f70da7 latency=35 periods from acceptance
+PASS Encrypt_TOP block 6: ciphertext=87ed89f0d01a7976a6b519db840ba802 latency=35 periods from acceptance
+PASS Encrypt_TOP block 7: ciphertext=9050663f2ea0b10412a33814f067db16 latency=35 periods from acceptance
+PASS Encrypt_TOP block 8: ciphertext=06d3b2454389053de47dc0dbe2d9ca0c latency=35 periods from acceptance
+PASS Encrypt_TOP block 9: ciphertext=2c19a11dc2d8fcbca365754151db9039 latency=35 periods from acceptance
+PASS Encrypt_TOP block 10: ciphertext=e758f93b7801554f3b2f0a1b9377d56e latency=35 periods from acceptance
+PASS Encrypt_TOP block 11: ciphertext=63dc8e49fd4144314caab287bff670c3 latency=35 periods from acceptance
+PASS Encrypt_TOP block 12: ciphertext=638d9ce60cfe4b968bca06c9600f86e7 latency=35 periods from acceptance
+PASS Encrypt_TOP block 13: ciphertext=7272cafafcba38e54ba36befad2e470c latency=35 periods from acceptance
+PASS Encrypt_TOP block 14: ciphertext=76a30352ef357ccd0037b3f6778279d2 latency=35 periods from acceptance
+PASS Encrypt_TOP block 15: ciphertext=7de40d95ee436f25ad30f32b11be7755 latency=35 periods from acceptance
+PASS Encrypt_TOP block 16: ciphertext=a0b9708743a465851984230d51fc1191 latency=35 periods from acceptance
+PASS Encrypt_TOP block 17: ciphertext=59a4b1aecb098f4987780b96d20f964f latency=35 periods from acceptance
+PASS Encrypt_TOP block 18: ciphertext=65356852a3cb172e3038b5f2407477cf latency=35 periods from acceptance
+PASS Encrypt_TOP block 19: ciphertext=3164364708ff684b941c587fb6d9a5bf latency=35 periods from acceptance
+PASS Encrypt_TOP block 20: ciphertext=7f679d90bebc24305a468d42b9d4edcd latency=35 periods from acceptance
+PASS Encrypt_TOP block 21: ciphertext=7f679d90bebc24305a468d42b9d4edcd latency=35 periods from acceptance
+PASS Encrypt_TOP block 22: ciphertext=94bec15e269cf1e506f02b994c0a8ea0 latency=35 periods from acceptance
+PASS Encrypt_TOP block 23: ciphertext=99f38e0e94818c9be1fba4278007d37d latency=35 periods from acceptance
+PASS busy_all_message: last=0/0/1, inter-block gaps, ready remains available
+PASS interface: held valid, ordered last=0/1, acceptance interval=36, no duplicates
+ALL PASS: Encrypt_TOP 26 blocks; latency=35; busy_all_message, ready/valid/last, held request, 32 Ci, key pairs, parallel F/LSX, pulse/hold, 35 reset positions
+$finish called at time : 15550 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/new/tb_encrypt_top.v" Line 527
+exit
+INFO: [Common 17-206] Exiting xsim at Mon Nov  2 18:33:28 2026...

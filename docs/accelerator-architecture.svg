@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1530" viewBox="0 0 1600 1530">
+<title>Спецускоритель: ввод HEX или ASCII, шифрование и расшифрование</title>
+<desc>Целевая схема. UART RX, входной FIFO, ветви HEX в байт и ASCII напрямую, формирователь блоков с дополнением, ускоритель, обработка результата с удалением дополнения при расшифровании, выходной FIFO, UART TX. Кнопки управляют микропрограммным ядром с двумя BRAM. CR LF завершает сообщение; режим фиксируется на его начало. RTL этой схемой не изменяется.</desc>
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24344a"/></marker>
+<marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#667487"/></marker>
+<style>
+text {font-family:Arial,'DejaVu Sans',sans-serif;fill:#192c43;text-anchor:middle}
+.h {font-size:32px;font-weight:700}.n {font-size:25px;font-weight:700}.s {font-size:21px;fill:#475970}.sm {font-size:19px;fill:#475970}
+.box {fill:#fff;stroke:#33465e;stroke-width:2.5;rx:12}.fifo {fill:#f1f5f9;stroke:#33465e;stroke-width:2.5;rx:12}.core {fill:#eaf1fa;stroke:#33465e;stroke-width:2.5;rx:12}
+.group {fill:none;stroke:#d4dce5;stroke-width:2;rx:18}.d {fill:none;stroke:#24344a;stroke-width:3;marker-end:url(#a)}.line {fill:none;stroke:#24344a;stroke-width:3}
+.ctrl {fill:none;stroke:#667487;stroke-width:2.3;stroke-dasharray:8 6;marker-end:url(#c)}.both {marker-start:url(#c)}.mem {fill:none;stroke:#24344a;stroke-width:2.5;marker-start:url(#a);marker-end:url(#a)}
+</style>
+</defs>
+<rect width="1600" height="1530" fill="#fff"/>
+<text x="800" y="57" class="h">Спецускоритель «Кузнечик»</text>
+<text x="800" y="97" class="s">Целевая архитектура с микропрограммным управлением</text>
+<rect x="60" y="145" width="1480" height="795" class="group"/>
+<text x="150" y="180" class="sm">ВВОД →</text>
+
+<text x="48" y="296" class="sm">ПК</text>
+<path d="M18 335 H98" class="d"/>
+<rect x="100" y="280" width="160" height="110" class="box"/>
+<text x="180" y="326" class="n">UART RX</text><text x="180" y="362" class="s">Приём</text>
+<text x="180" y="430" class="sm">clk_uart</text>
+<path d="M260 335 H328" class="d"/>
+<rect x="330" y="280" width="145" height="110" class="fifo"/>
+<text x="402" y="326" class="n">FIFO RX</text><text x="402" y="362" class="s">10 бит</text>
+<text x="402" y="430" class="sm">wr: clk_uart</text><text x="402" y="460" class="sm">rd: clk_core</text>
+
+<rect x="520" y="195" width="480" height="315" class="group"/>
+<text x="760" y="229" class="s">Выбор ввода • CR LF → msg_end</text>
+<path d="M475 335 H550" class="line"/><path d="M550 335 V292 H588" class="d"/><path d="M550 335 V412 H588" class="d"/>
+<rect x="590" y="252" width="300" height="80" class="box"/>
+<text x="740" y="285" class="n">HEX → байт</text><text x="740" y="315" class="sm">2 символа → 8 бит</text>
+<rect x="590" y="372" width="300" height="80" class="box"/>
+<text x="740" y="405" class="n">ASCII напрямую</text><text x="740" y="435" class="sm">1 символ → 8 бит</text>
+<path d="M890 292 H960 V352" class="line"/><path d="M890 412 H960 V352" class="line"/><path d="M960 352 H1088" class="d"/>
+<text x="1027" y="331" class="sm">Байты</text>
+<text x="760" y="487" class="sm">DEC: всегда ветвь HEX</text>
+
+<rect x="1090" y="260" width="350" height="190" class="core"/>
+<text x="1265" y="300" class="n">Формирователь</text><text x="1265" y="334" class="n">блоков 16 байт</text>
+<text x="1265" y="379" class="s">ENC: добавить 80, затем 00</text><text x="1265" y="414" class="s">DEC: проверить длину</text>
+<path d="M1000 212 H1265 V258" class="ctrl"/>
+<text x="1132" y="195" class="sm">msg_end</text>
+<path d="M1265 450 V598" class="d"/>
+<text x="1360" y="501" class="sm">128 бит</text><text x="1360" y="531" class="sm">valid / ready</text>
+
+<rect x="1110" y="600" width="310" height="180" class="core"/>
+<text x="1265" y="642" class="n">Спецускоритель</text><text x="1265" y="679" class="n">«Кузнечик»</text><text x="1265" y="720" class="s">ENC / DEC • ключи K1…K10</text><text x="1265" y="752" class="sm">clk_core</text>
+<path d="M1110 690 H1002" class="d"/>
+<text x="1056" y="669" class="sm">128 бит</text>
+<rect x="650" y="595" width="350" height="195" class="box"/>
+<text x="825" y="633" class="n">Обработка результата</text><text x="825" y="673" class="s">ENC: результат → HEX</text><text x="825" y="707" class="s">DEC: удержать последний блок</text><text x="825" y="741" class="s">и снять дополнение 80 00…</text><text x="825" y="772" class="sm">Преобразование в байтовый поток</text>
+<path d="M650 690 H542" class="d"/>
+<rect x="395" y="635" width="145" height="110" class="fifo"/>
+<text x="467" y="681" class="n">FIFO TX</text><text x="467" y="717" class="s">8 бит</text>
+<text x="467" y="829" class="sm">wr: clk_core</text><text x="467" y="859" class="sm">rd: clk_uart</text>
+<path d="M395 690 H282" class="d"/>
+<rect x="120" y="635" width="160" height="110" class="box"/>
+<text x="200" y="681" class="n">UART TX</text><text x="200" y="717" class="s">Передача</text><text x="200" y="790" class="sm">clk_uart</text>
+<path d="M120 690 H20" class="d"/><text x="48" y="649" class="sm">ПК</text>
+<text x="825" y="889" class="sm">Ключ: отдельная загрузка 64 HEX-символов → регистр 256 бит</text>
+<text x="1400" y="909" class="sm">← ВЫВОД</text>
+
+<path d="M910 1038 V942" class="ctrl both"/>
+<text x="1175" y="982" class="s">start / busy / done · выбор режима</text><text x="1175" y="1011" class="sm">Готовность FIFO · ошибки · самопроверка</text>
+<rect x="700" y="1040" width="420" height="165" class="core"/>
+<text x="910" y="1082" class="n">Микропрограммное ядро</text><text x="910" y="1122" class="s">ENC HEX • ENC ASCII • DEC HEX</text><text x="910" y="1156" class="s">Выбор ввода · запуск · самопроверка</text><text x="910" y="1186" class="sm">Режим фиксируется на начало сообщения</text>
+
+<rect x="100" y="1040" width="380" height="165" class="box"/>
+<text x="290" y="1083" class="n">Кнопки</text><text x="290" y="1124" class="s">HEX / ASCII • ENC / DEC</text><text x="290" y="1163" class="s">Синхронизация и дребезг</text>
+<path d="M480 1122 H698" class="ctrl"/>
+
+<path d="M805 1207 V1254 H710 V1298" class="mem"/><path d="M1015 1207 V1254 H1210 V1298" class="mem"/>
+<text x="635" y="1237" class="sm">Адрес / инструкция</text><text x="1260" y="1237" class="sm">Адрес / эталон</text>
+<rect x="560" y="1300" width="300" height="115" class="box"/>
+<text x="710" y="1345" class="n">BRAM команд</text><text x="710" y="1383" class="s">Программы обработки</text>
+<rect x="1060" y="1300" width="300" height="115" class="box"/>
+<text x="1210" y="1345" class="n">BRAM эталонов</text><text x="1210" y="1383" class="s">Тесты и самопроверка</text>
+<path d="M130 1470 H210" class="d"/><text x="300" y="1477" class="sm">Данные</text><path d="M440 1470 H520" class="ctrl"/><text x="640" y="1477" class="sm">Управление / события</text>
+<text x="1190" y="1462" class="sm">CR LF не включается в сообщение.</text><text x="1190" y="1493" class="sm">DEC не добавляет 80 и нули.</text>
+<text x="485" y="1512" class="sm">ENC: при длине 16·n байт — дополнительный блок 80 00…</text></svg>
+

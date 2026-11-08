@@ -1,0 +1,108 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Oct 19 18:42:10 2026
+# Process ID: 10452
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab
+# Command line: vivado.exe -mode batch -source work/check_matrix_round_project.tcl -log work/check_matrix_round_project.log -journal work/check_matrix_round_project.jou
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/check_matrix_round_project.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab\work/check_matrix_round_project.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+CRITICAL WARNING: [Common 17-741] No write access right to the local Tcl store at 'C'. XilinxTclStore is reverted to the installation area. If you want to use local Tcl Store, please change the access right and relaunch Vivado.
+source work/check_matrix_round_project.tcl
+# set root [file normalize [file join [file dirname [info script]] ..]]
+# open_project [file join $root CourseLab.xpr]
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.gen/sources_uart'.
+Scanning sources...
+Finished scanning sources
+# set active_sim [get_property name [current_fileset -simset]]
+# set existing_top [get_property top [get_filesets sources_1]]
+# set sim [get_filesets sim_round]
+# set_property SOURCE_SET sources_1 $sim
+# set_property top tb_matrix_round $sim
+# set_property top_auto_set false $sim
+# set_property xsim.simulate.runtime all $sim
+# update_compile_order -fileset sim_round
+# launch_simulation -simset sim_round -mode behavioral
+Command: launch_simulation  -simset sim_round -mode behavioral
+INFO: [Vivado 12-12493] Simulation top is 'tb_matrix_round'
+WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
+WARNING: [Vivado 12-13277] Compiled library path does not exist: ''
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_round'
+INFO: [SIM-utils-72] Using boost library from 'C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_matrix_round' in fileset 'sim_round'...
+INFO: [SIM-utils-43] Exported 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim/matrix_round_vectors.mem'
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_round'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim'
+"xvlog --incr --relax -prj tb_matrix_round_vlog.prj"
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_1/new/f_matrix_onecycle.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module f_matrix_onecycle
+INFO: [VRFC 10-311] analyzing module lsx_matrix_onecycle
+INFO: [VRFC 10-311] analyzing module kuz_lsx_matrix_comb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_1/new/l_matrix_onecycle.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module l_matrix_onecycle
+INFO: [VRFC 10-311] analyzing module l_matrix_comb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/new/tb_matrix_round.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_matrix_round
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim'
+"xelab --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_matrix_round_behav xil_defaultlib.tb_matrix_round xil_defaultlib.glbl -log elaborate.log"
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_matrix_round_behav xil_defaultlib.tb_matrix_round xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.l_matrix_comb
+Compiling module xil_defaultlib.kuz_lsx_matrix_comb
+Compiling module xil_defaultlib.f_matrix_onecycle
+Compiling module xil_defaultlib.lsx_matrix_onecycle
+Compiling module xil_defaultlib.tb_matrix_round
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_matrix_round_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_round/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "tb_matrix_round_behav -key {Behavioral:sim_uart:Functional:tb_matrix_round} -tclbatch {tb_matrix_round.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+source tb_matrix_round.tcl
+## current_wave_config
+WARNING: [Wavedata 42-489] Can't add object "/tb_matrix_round/vectors" to the wave window because it has 283136 bits, which exceeds the display limit of 65536 bits.  To change the display limit, use the command "set_property display_limit <new limit> [current_wave_config]".
+RFC FIRST F: A=c3d5fa01ebe36f7a9374427ad7ca8949 B=8899aabbccddeeff0011223344556677 cycles=1
+RFC KEYS after step 8: db31485315694343228d6aef8cc78c44 3d4553d8e9cfec6815ebadc40a9ffd04
+RFC KEYS after step 16: 57646468c44a5e28d3e59246f429f1ac bd079435165c6432b532e82834da581b
+RFC KEYS after step 24: 51e640757e8745de705727265a0098b1 5a7925017b9fdd3ed72a91a22286f984
+RFC KEYS after step 32: bb44e25378c73123a5f32f73cdb6e517 72e9dd7416bcf45b755dbaa88e4a4043
+RFC FIRST ENCRYPTION ROUND: e297b686e355b0a1cf4a2f9249140830 cycles=1
+ALL PASS: 553 F and LSX vectors; one cycle; key feedback, full encryption, all S inputs, stalls and reset
+$finish called at time : 2952600 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/new/tb_matrix_round.v" Line 82
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'tb_matrix_round_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for all
+launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:08 . Memory (MB): peak = 422.340 ; gain = 22.926
+# close_sim
+INFO: [Simtcl 6-16] Simulation closed
+# set log_file [open [file join $root CourseLab.sim sim_round behav xsim simulate.log] r]
+# set sim_log [read $log_file]
+# close $log_file
+# current_fileset -simset [get_filesets $active_sim]
+# if {[get_property top [get_filesets sources_1]] ne $existing_top} {error "Existing synthesis top changed"}
+# close_project
+# if {[string first "ALL PASS: 553 F and LSX vectors" $sim_log] < 0} {error "Project simulation failed"}
+# puts "PROJECT_ROUND_CHECK_PASS: sources, vector copying, sim_round and existing top validated"
+PROJECT_ROUND_CHECK_PASS: sources, vector copying, sim_round and existing top validated
+# exit
+INFO: [Common 17-206] Exiting Vivado at Mon Oct 19 18:42:27 2026...

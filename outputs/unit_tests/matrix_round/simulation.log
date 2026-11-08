@@ -1,0 +1,46 @@
+#-----------------------------------------------------------
+# xsim v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Nov  2 22:28:00 2026
+# Process ID: 2984
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_matrix_round
+# Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_matrix_round/simulation.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_matrix_round\xsim.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source xsim.dir/test_snapshot/xsim_script.tcl
+# xsim {test_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+
+TEST 1: RESET
+TEST 1: PASS
+
+TEST 2: STANDARD FIRST F AND LSX EXAMPLE
+TEST 2: PASS
+
+TEST 3: ALL ZERO INPUTS
+TEST 3: PASS
+
+TEST 4: ALL ONE INPUTS
+TEST 4: PASS
+
+TEST 5: DISABLED INPUT CHANGES AND RESULT HOLD
+TEST 5: PASS
+
+TEST 6: THREE CONSECUTIVE STEPS WITH F FEEDBACK
+TEST 6: PASS
+
+TEST 7: INDEPENDENT ENABLES
+TEST 7: PASS
+
+TEST 8: RESET PRIORITY AND RECOVERY
+TEST 8: PASS
+
+TESTS PASSED: 8 / 8
+ALL PASS: F and LSX; 8 scenarios
+$finish called at time : 82600 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_matrix_round.v" Line 300
+exit
+INFO: [Common 17-206] Exiting xsim at Mon Nov  2 22:28:02 2026...

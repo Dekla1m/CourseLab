@@ -1,0 +1,73 @@
+#-----------------------------------------------------------
+# xsim v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Nov  2 21:36:00 2026
+# Process ID: 29876
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_key_input_order
+# Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_key_input_order/simulation.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_key_input_order\xsim.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source xsim.dir/test_snapshot/xsim_script.tcl
+# xsim {test_snapshot} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+
+TEST 1: RESET, HOLD AND WAITING INPUT BYTE
+TEST 1: PASS
+
+TEST 2: ZERO KEY
+TEST 2: PASS
+
+TEST 3: ALL-ONES KEY
+TEST 3: PASS
+
+TEST 4: EMPTY KEY
+TEST 4: PASS
+
+TEST 5: 63 HEX CHARACTERS
+TEST 5: PASS
+
+TEST 6: 65 HEX CHARACTERS
+TEST 6: PASS
+
+TEST 7: INVALID HEX CHARACTER
+TEST 7: PASS
+
+TEST 8: PARITY ERROR
+TEST 8: PASS
+
+TEST 9: STOP ERROR
+TEST 9: PASS
+
+TEST 10: UART ERROR ON CR
+TEST 10: PASS
+
+TEST 11: UART ERROR ON LF
+TEST 11: PASS
+
+TEST 12: EXTRA CHARACTER BEFORE CR
+TEST 12: PASS
+
+TEST 13: WRONG CHARACTER AFTER CR
+TEST 13: PASS
+
+TEST 14: REPEATED CR
+TEST 14: PASS
+
+TEST 15: RECOVERY AFTER INVALID INPUT
+TEST 15: PASS
+
+TEST 16: RESET DURING PARTIAL KEY
+TEST 16: PASS
+
+TEST 17: RESET DURING HELD RESULT
+TEST 17: PASS
+
+TESTS PASSED: 17 / 17
+ALL PASS: Key_input_order unit test; 17 scenarios, 18 results
+$finish called at time : 24900 ns : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_uart/new/tb_key_input_order.v" Line 338
+exit
+INFO: [Common 17-206] Exiting xsim at Mon Nov  2 21:36:02 2026...

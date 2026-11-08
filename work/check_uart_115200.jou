@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Oct 19 17:12:02 2026
+# Process ID: 18028
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab
+# Command line: vivado.exe -mode batch -source work\check_uart.tcl -log work\check_uart_115200.log -journal work\check_uart_115200.jou -tclargs sim_only
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/check_uart_115200.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab\work\check_uart_115200.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source {work\check_uart.tcl}
+source tb_kuz_uart.tcl

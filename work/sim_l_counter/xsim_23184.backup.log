@@ -1,0 +1,26 @@
+#-----------------------------------------------------------
+# xsim v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Wed Oct 14 23:33:08 2026
+# Process ID: 23184
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_l_counter
+# Command line: xsim.exe -log xsim.log -mode tcl -source {xsim.dir/l_counter_snapshot/xsim_script.tcl}
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_l_counter/xsim.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_l_counter\xsim.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source xsim.dir/l_counter_snapshot/xsim_script.tcl
+# xsim {l_counter_snapshot} -autoloadwcfg -tclbatch {C:/Users/cosmo/VivadoProjects/CourseLab/work/run_l_counter_xsim.tcl}
+Time resolution is 1 ps
+source C:/Users/cosmo/VivadoProjects/CourseLab/work/run_l_counter_xsim.tcl
+## log_wave -r /
+## run all
+MATRIX L: input=00000000000000000000000000000000 output=00000000000000000000000000000000 cycles=1 elapsed_ns=10.0
+MATRIX L: input=00000000000000000000000000000001 output=6ea276726c487ab85d27bd10dd849401 cycles=1 elapsed_ns=10.0
+MATRIX L: input=64a59400000000000000000000000000 output=d456584dd0e3e84cc3166e4b7fa2890d cycles=1 elapsed_ns=10.0
+MATRIX L: input=e87de8b6e87de8b6b6b6b6b6b6b6b6b6 output=e297b686e355b0a1cf4a2f9249140830 cycles=1 elapsed_ns=10.0
+PASS: 4 full-L examples; latency = 1 cycle.
+$finish called at time : 105100 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/new/tb.v" Line 99
+## quit
+INFO: [Common 17-206] Exiting xsim at Wed Oct 14 23:33:10 2026...

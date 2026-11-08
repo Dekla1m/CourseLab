@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Wed Oct 14 23:31:55 2026
+# Process ID: 16248
+# Current directory: C:/Users/cosmo/VivadoProjects/CourseLab
+# Command line: vivado.exe -mode batch -notrace -source work/run_l_counter.tcl -log work/run_l_counter.log -journal work/run_l_counter.jou
+# Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/run_l_counter.log
+# Journal file: C:/Users/cosmo/VivadoProjects/CourseLab\work/run_l_counter.jou
+# Running On: kulebyaka, OS: Windows, CPU Frequency: 2611 MHz, CPU Physical cores: 10, Host memory: 16763 MB
+#-----------------------------------------------------------
+source work/run_l_counter.tcl -notrace
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+Command: launch_simulation  -simset sim_1 -mode behavioral
+INFO: [Vivado 12-12493] Simulation top is 'tb'
+WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
+boost::filesystem::remove: Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.sim/sim_1/behav/xsim/simulate.log"
+    while executing
+"launch_simulation -simset sim_1 -mode behavioral"
+    (file "work/run_l_counter.tcl" line 16)
+INFO: [Common 17-206] Exiting Vivado at Wed Oct 14 23:32:05 2026...

@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/KM_ASCII_TO_HEX.v" into library work
+INFO: [VRFC 10-311] analyzing module KM_ASCII_TO_HEX
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sources_uart/new/Key_input_order.v" into library work
+INFO: [VRFC 10-311] analyzing module Key_input_order
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_uart/new/tb_key_input_order.v" into library work
+INFO: [VRFC 10-311] analyzing module tb_key_input_order
