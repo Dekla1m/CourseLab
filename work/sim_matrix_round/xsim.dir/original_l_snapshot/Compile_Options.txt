@@ -1,1 +1,0 @@
-"tb" -s "original_l_snapshot" -debug "typical" 

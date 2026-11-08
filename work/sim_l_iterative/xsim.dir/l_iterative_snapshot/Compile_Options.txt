@@ -1,1 +1,0 @@
---relax --debug "typical" --mt "2" "xil_defaultlib.tb_iterative" -s "l_iterative_snapshot" -log "xelab.log" 
