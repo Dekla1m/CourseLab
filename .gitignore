@@ -1,0 +1,17 @@
+/.Xil/
+/CourseLab.cache/
+/CourseLab.gen/
+/CourseLab.hw/
+/CourseLab.ip_user_files/
+/CourseLab.runs/
+/CourseLab.sim/
+
+/*.jou
+/*.log
+/*.pb
+/tight_setup_hold_pins.txt
+
+/work/sim_*/
+/work/*.jou
+/work/*.log
+/outputs/**/*.dcp

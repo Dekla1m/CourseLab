@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
-| Date             : Sun Nov  8 17:57:15 2026
+| Date             : Sun Nov  8 18:24:08 2026
 | Host             : kulebyaka running 64-bit major release  (build 9200)
 | Command          : report_power -file test_impl_IO_low_power_routed.rpt -pb test_impl_IO_low_power_summary_routed.pb -rpx test_impl_IO_low_power_routed.rpx
 | Design           : test_impl_IO_low
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 0.701        |
+| Total On-Chip Power (W)  | 0.746        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.608        |
+| Dynamic (W)              | 0.653        |
 | Device Static (W)        | 0.093        |
 | Effective TJA (C/W)      | 4.6          |
-| Max Ambient (C)          | 81.8         |
-| Junction Temperature (C) | 28.2         |
+| Max Ambient (C)          | 81.6         |
+| Junction Temperature (C) | 28.4         |
 | Confidence Level         | Low          |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,16 +52,16 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Clocks         |     0.011 |        3 |       --- |             --- |
-| Slice Logic    |     0.235 |    12065 |       --- |             --- |
-|   LUT as Logic |     0.233 |     8253 |     63400 |           13.02 |
-|   F7/F8 Muxes  |     0.002 |      384 |     63400 |            0.61 |
-|   Register     |    <0.001 |     2261 |    126800 |            1.78 |
+| Clocks         |     0.013 |        3 |       --- |             --- |
+| Slice Logic    |     0.254 |    12229 |       --- |             --- |
+|   LUT as Logic |     0.252 |     8140 |     63400 |           12.84 |
+|   F7/F8 Muxes  |     0.001 |      384 |     63400 |            0.61 |
+|   Register     |    <0.001 |     2386 |    126800 |            1.88 |
 |   Others       |     0.000 |        8 |       --- |             --- |
-| Signals        |     0.354 |    10409 |       --- |             --- |
+| Signals        |     0.378 |    10449 |       --- |             --- |
 | I/O            |     0.008 |      106 |       210 |           50.48 |
 | Static Power   |     0.093 |          |           |                 |
-| Total          |     0.701 |          |           |                 |
+| Total          |     0.746 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -71,7 +71,7 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint    |       1.000 |     0.617 |       0.601 |      0.017 |       NA    | Unspecified | NA         |
+| Vccint    |       1.000 |     0.663 |       0.646 |      0.017 |       NA    | Unspecified | NA         |
 | Vccaux    |       1.800 |     0.019 |       0.001 |      0.018 |       NA    | Unspecified | NA         |
 | Vcco33    |       3.300 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -140,14 +140,14 @@ Table of Contents
 +----------------------------+-----------+
 | Name                       | Power (W) |
 +----------------------------+-----------+
-| test_impl_IO_low           |     0.608 |
-|   dut                      |     0.599 |
-|     decrypter              |     0.281 |
-|       round_data_transform |     0.080 |
-|       round_key_transform  |     0.195 |
-|     encrypter              |     0.317 |
-|       round_data_transform |     0.140 |
-|       round_key_transform  |     0.173 |
+| test_impl_IO_low           |     0.653 |
+|   dut                      |     0.644 |
+|     decrypter              |     0.269 |
+|       round_data_transform |     0.067 |
+|       round_key_transform  |     0.193 |
+|     encrypter              |     0.375 |
+|       round_data_transform |     0.143 |
+|       round_key_transform  |     0.223 |
 +----------------------------+-----------+
 
 

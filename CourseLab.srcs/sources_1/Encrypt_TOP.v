@@ -38,8 +38,9 @@ module Encrypt_TOP (
     wire [127:0] round_data_output;   // Последний результат в выходном регистре LSX.
     wire         data_round_done;
 
-    wire [5:0]   current_Ci_index = key_step_count + 6'd1;
-    wire [127:0] current_Ci;
+    // Номер константы текущего шага F для проверки в testbench.
+    wire [5:0] current_Ci_index = key_step_count + 6'd1;
+    reg [127:0] current_Ci;
 
 
     // ========== Приём и расписание раундов ==========
@@ -70,9 +71,13 @@ module Encrypt_TOP (
 
     // ========== Вычислительные модули ==========
 
+    // При приёме блока выбираем C1, во время F выбираем константу следующего шага.
+    wire [5:0] prefetch_Ci_index = data_input_accept ? 6'd1 : key_step_count + 6'd2;
+    wire [127:0] prefetched_Ci;
+
     kuz_round_constant round_constant_lookup (
-        .iteration_index(current_Ci_index),
-        .iteration_constant(current_Ci)
+        .iteration_index(prefetch_Ci_index),
+        .iteration_constant(prefetched_Ci)
     );
 
     data_matrix_onecycle round_data_transform (
@@ -100,6 +105,15 @@ module Encrypt_TOP (
         .key_right_output(next_key_state[127:0]),
         .key_step_done(key_step_done)
     );
+
+
+    // На одном фронте F фиксирует результат с текущей Ci, а регистр принимает следующую Ci.
+    always @(posedge clk) begin
+        if (rst)
+            current_Ci <= 128'b0;
+        else if (data_input_accept || key_step_enable)
+            current_Ci <= prefetched_Ci;
+    end
 
 
     // ========== Приём блока и обновление регистров ==========
