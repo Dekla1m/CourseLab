@@ -10,8 +10,9 @@ module tb_encrypt_top;
     reg data_input_valid;
     reg data_input_last;
     reg [127:0] data_input;
-    reg [255:0] start_key_input;
+    reg [127:0] round_key_input;
 
+    wire [3:0] round_key_read_index;
     wire data_input_ready;
     wire [127:0] data_output;
     wire data_output_valid;
@@ -22,12 +23,8 @@ module tb_encrypt_top;
     integer PASSED;
     integer blocks;
     integer cycles;
-    integer key_steps;
     integer data_rounds;
-    integer pair_index;
-    integer last_key_cycle;
-    integer overlap_cycles;             // Такты, в которых одновременно работают F и LSX.
-    reg checking;                       // Разрешение проверки внутренних ключей текущего блока.
+    reg checking;                       // Разрешение проверки порядка ключей.
 
     reg expected_message_busy;          // Модель занятости сообщением, включая паузы между блоками.
     reg pending;                        // Есть принятый блок, для которого ещё не получен результат.
@@ -47,10 +44,11 @@ module tb_encrypt_top;
         .clk(clk),
         .rst(rst),
         .data_input(data_input),
-        .start_key_input(start_key_input),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last),
         .data_input_ready(data_input_ready),
+        .round_key_read_index(round_key_read_index),
+        .round_key_input(round_key_input),
         .data_output(data_output),
         .data_output_valid(data_output_valid),
         .data_output_last(data_output_last),
@@ -201,7 +199,7 @@ module tb_encrypt_top;
             if (data_output_valid === 1'b1) begin
                 check(pending === 1 && data_output_last === expected_last,
                       "Unexpected result, duplicate result or wrong last");
-                check(cycles - acceptance_cycle == 35, "Latency is not 35 cycles");
+                check(cycles - acceptance_cycle == 10, "Latency is not 10 cycles");
                 pending = 0;
                 if (expected_last)
                     expected_message_busy = 0;
@@ -218,29 +216,16 @@ module tb_encrypt_top;
         end
     end
 
+    // Модель синхронного банка: адрес выставляется до фронта, ключ появляется после.
     always @(posedge clk) begin
-        if (!rst && checking) begin
-            if (dut.data_round_enable) begin
-                check(dut.current_key === expected_keys[data_rounds], "Wrong key at data round input");
-                data_rounds = data_rounds + 1;
-            end
-            if (dut.data_round_enable && dut.key_step_enable)
-                overlap_cycles = overlap_cycles + 1;
+        if (rst)
+            round_key_input <= 128'b0;
+        else
+            round_key_input <= expected_keys[round_key_read_index];
 
-            if (dut.key_step_enable) begin
-                // Проверяется константа именно внутри TOP; отдельного DUT таблицы нет.
-                check(dut.current_Ci_index === key_steps + 1 &&
-                      dut.current_Ci === ref_linear(key_steps + 1), "Wrong Ci or Ci index inside TOP");
-                if (key_steps > 0)
-                    check(cycles - last_key_cycle == 1, "Idle cycle between F steps");
-                last_key_cycle = cycles;
-                key_steps = key_steps + 1;
-            end
-            if (dut.capture_key_pair) begin
-                pair_index = dut.key_step_count / 4;
-                check(dut.next_key_state === {expected_keys[pair_index], expected_keys[pair_index+1]},
-                      "Expanded round-key pair mismatch");
-            end
+        if (!rst && checking && dut.data_round_enable) begin
+            check(round_key_input === expected_keys[data_rounds], "Wrong key at data round input");
+            data_rounds = data_rounds + 1;
         end
     end
 
@@ -293,11 +278,8 @@ module tb_encrypt_top;
             @(negedge clk);
             check(data_input_ready === 1, "Idle core is not ready");
             checking = 1;
-            key_steps = 0;
             data_rounds = 0;
-            overlap_cycles = 0;
             data_input = plaintext;
-            start_key_input = key;
             data_input_valid = 1;
             data_input_last = last_block;
             @(posedge clk);
@@ -307,11 +289,10 @@ module tb_encrypt_top;
             @(negedge clk);
             data_input_valid = 0;
             data_input = ~plaintext;
-            start_key_input = ~key;
             data_input_last = !last_block;
 
             waited = 0;
-            while (data_output_valid !== 1'b1 && waited < 40) begin
+            while (data_output_valid !== 1'b1 && waited < 12) begin
                 @(posedge clk);
                 #0.1;
                 waited = waited + 1;
@@ -321,9 +302,8 @@ module tb_encrypt_top;
                 $display("Actual=%032h expected=%032h", data_output, expected);
                 check(0, "Ciphertext mismatch");
             end
-            check(key_steps == 32 && data_rounds == 9 && overlap_cycles == 8,
-                  "F/LSX operation counts or overlap mismatch");
-            check(cycles - accepted_cycle == 35, "Latency is not 35 cycles");
+            check(data_rounds == 9, "Expected nine LSX rounds");
+            check(cycles - accepted_cycle == 10, "Latency is not 10 cycles");
             blocks = blocks + 1;
             checking = 0;
             held = data_output;
@@ -348,11 +328,8 @@ module tb_encrypt_top;
             reference_encrypt(RFC_INPUT, RFC_KEY, first_expected);
             @(negedge clk);
             checking = 1;
-            key_steps = 0;
             data_rounds = 0;
-            overlap_cycles = 0;
             data_input = RFC_INPUT;
-            start_key_input = RFC_KEY;
             data_input_last = 0;
             data_input_valid = 1;
             @(posedge clk);
@@ -364,30 +341,27 @@ module tb_encrypt_top;
             repeat (5) @(negedge clk);
             check(data_input_ready === 0, "Busy core accepted another block");
             data_input = 0;
-            start_key_input = RFC_KEY;
             data_input_last = 1;
             data_input_valid = 1;
 
             waited = 0;
-            while (data_output_valid !== 1'b1 && waited < 40) begin
+            while (data_output_valid !== 1'b1 && waited < 12) begin
                 @(posedge clk);
                 #0.1;
                 waited = waited + 1;
             end
             check(data_output_valid === 1 && data_output === first_expected && data_output_last === 0,
                   "Waiting input changed the first result");
-            check(cycles - first_cycle == 35 && key_steps == 32 && data_rounds == 9 && overlap_cycles == 8,
+            check(cycles - first_cycle == 10 && data_rounds == 9,
                   "First operation schedule mismatch");
             blocks = blocks + 1;
 
             reference_encrypt(0, RFC_KEY, second_expected);
-            key_steps = 0;
             data_rounds = 0;
-            overlap_cycles = 0;
             @(posedge clk);
             #0.1;
             second_cycle = cycles;
-            check(second_cycle - first_cycle == 36 && data_input_ready === 0 && data_output_valid === 0,
+            check(second_cycle - first_cycle == 11 && data_input_ready === 0 && data_output_valid === 0,
                   "Waiting request was not accepted on the first free edge");
             @(negedge clk);
             data_input_valid = 0;
@@ -395,20 +369,20 @@ module tb_encrypt_top;
             data_input = RFC_INPUT;
 
             waited = 0;
-            while (data_output_valid !== 1'b1 && waited < 40) begin
+            while (data_output_valid !== 1'b1 && waited < 12) begin
                 @(posedge clk);
                 #0.1;
                 waited = waited + 1;
             end
             check(data_output_valid === 1 && data_output === second_expected && data_output_last === 1,
                   "Waiting block result or last mismatch");
-            check(cycles - second_cycle == 35 && key_steps == 32 && data_rounds == 9 && overlap_cycles == 8,
+            check(cycles - second_cycle == 10 && data_rounds == 9,
                   "Waiting operation schedule mismatch");
             blocks = blocks + 1;
             checking = 0;
 
             // Ждём больше полной задержки, чтобы обнаружить лишний принятый запрос.
-            repeat (40) @(negedge clk);
+            repeat (11) @(negedge clk);
             check(data_output_valid === 0 && pending === 0, "Duplicate operation after held request");
         end
     endtask
@@ -419,7 +393,6 @@ module tb_encrypt_top;
             @(negedge clk);
             check(data_input_ready === 1, "Abort scenario started while busy");
             data_input = RFC_INPUT;
-            start_key_input = RFC_KEY;
             data_input_valid = 1;
             data_input_last = 1;
             @(negedge clk);
@@ -430,13 +403,13 @@ module tb_encrypt_top;
             @(posedge clk);
             #0.3;
             check(data_output_valid === 0 && data_output === 0 && data_output_last === 0 &&
-                  data_input_ready === 0 && dut.key_step_count === 0 && dut.busy === 0,
+                  data_input_ready === 0 && dut.data_round_index === 0 && dut.busy === 0,
                   "Reset did not override processing and input valid");
             @(negedge clk);
             rst = 0;
             data_input_valid = 0;
 
-            repeat (36) begin
+            repeat (11) begin
                 @(posedge clk);
                 #0.3;
                 check(data_output_valid === 0, "Aborted operation produced a result");
@@ -451,14 +424,11 @@ module tb_encrypt_top;
         data_input_valid = 0;
         data_input_last = 0;
         data_input = 0;
-        start_key_input = 0;
         TESTS = 0;
         PASSED = 0;
         blocks = 0;
         cycles = 0;
-        key_steps = 0;
         data_rounds = 0;
-        overlap_cycles = 0;
         checking = 0;
         expected_message_busy = 0;
         pending = 0;
@@ -509,16 +479,16 @@ module tb_encrypt_top;
         abort_block(0);
         pass_test;
 
-        begin_test("RESET DURING PARALLEL F AND LSX");
+        begin_test("RESET AFTER THE FIRST LSX ROUND");
         abort_block(1);
         pass_test;
 
-        begin_test("RESET DURING KEY EXPANSION");
+        begin_test("RESET DURING LSX ROUNDS");
         abort_block(7);
         pass_test;
 
         begin_test("RESET BEFORE THE RESULT EDGE");
-        abort_block(34);
+        abort_block(9);
         pass_test;
 
         begin_test("ENCRYPTION AFTER RESET");
@@ -546,7 +516,7 @@ module tb_encrypt_top;
 
         $display("\nTESTS PASSED: %0d / %0d", PASSED, TESTS);
         if (PASSED == TESTS)
-            $display("ALL PASS: Encrypt_TOP; %0d scenarios; %0d blocks; latency=35", TESTS, blocks);
+            $display("ALL PASS: Encrypt_TOP; %0d scenarios; %0d blocks; latency=10", TESTS, blocks);
         else
             $display("FAIL: Encrypt_TOP summary");
         $finish;

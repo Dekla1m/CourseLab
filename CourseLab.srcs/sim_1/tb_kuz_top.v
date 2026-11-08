@@ -4,8 +4,8 @@
 
 module tb_kuz_top;
 
-    localparam integer ENC_LATENCY = 35;
-    localparam integer DEC_LATENCY = 43;
+    localparam integer ENC_LATENCY = 10;
+    localparam integer DEC_LATENCY = 10;
 
     localparam [255:0] KEY = 256'h8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef;
 
@@ -22,9 +22,12 @@ module tb_kuz_top;
     reg         btn_pulse;
     reg [127:0] data_input;
     reg [255:0] start_key_input;
+    reg         key_input_valid;
     reg         data_input_valid;
     reg         data_input_last;
 
+    wire         key_input_ready;
+    wire         round_keys_ready;
     wire         data_input_ready;
     wire [127:0] data_output;
     wire         data_output_valid;
@@ -37,6 +40,7 @@ module tb_kuz_top;
     integer cycle_number;
     integer accepted_cycle;       // Номер фронта фактического приёма последнего блока.
     integer accepted_blocks;
+    integer accepted_keys;
     integer completed_blocks;
     integer mode_switches;
     integer before_accept;
@@ -56,6 +60,9 @@ module tb_kuz_top;
 
         .data_input(data_input),
         .start_key_input(start_key_input),
+        .key_input_valid(key_input_valid),
+        .key_input_ready(key_input_ready),
+        .round_keys_ready(round_keys_ready),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last),
         .data_input_ready(data_input_ready),
@@ -81,6 +88,9 @@ module tb_kuz_top;
             accepted_cycle = cycle_number;
             accepted_blocks = accepted_blocks + 1;
         end
+
+        if (!rst && key_input_valid && key_input_ready)
+            accepted_keys = accepted_keys + 1;
 
         #0.2;
         if (!rst && data_output_valid)
@@ -131,6 +141,7 @@ module tb_kuz_top;
             @(negedge clk);
             rst = 1;
             btn_pulse = 0;
+            key_input_valid = 0;
             data_input_valid = 0;
 
             sample_edge;
@@ -142,9 +153,40 @@ module tb_kuz_top;
             @(negedge clk);
             rst = 0;
             sample_edge;
-            check(data_input_ready === 1 && data_output_valid === 0 &&
+            check(data_input_ready === 0 && round_keys_ready === 0 &&
+                  key_input_ready === 1 && data_output_valid === 0 &&
                   busy_all_message === 0 && switch_mode_pulse === 0,
                   "Core did not return to idle after reset");
+        end
+    endtask
+
+    task wait_for_keys;
+        integer elapsed;
+        begin
+            for (elapsed = 1; elapsed < 33; elapsed = elapsed + 1) begin
+                sample_edge;
+                check(round_keys_ready === 0 && data_input_ready === 0,
+                      "A block could enter during key preparation");
+            end
+            sample_edge;
+            check(round_keys_ready === 1 && data_input_ready === 1,
+                  "Prepared keys did not open the data input");
+        end
+    endtask
+
+    task load_key;
+        input [255:0] key;
+        integer previous_keys;
+        begin
+            @(negedge clk);
+            previous_keys = accepted_keys;
+            start_key_input = key;
+            key_input_valid = 1'b1;
+            sample_edge;
+            check(accepted_keys == previous_keys + 1, "Key request was not accepted");
+            @(negedge clk);
+            key_input_valid = 1'b0;
+            wait_for_keys;
         end
     endtask
 
@@ -157,7 +199,6 @@ module tb_kuz_top;
             check(data_input_ready === 1, "Core is not ready for this block");
             previous_accepts = accepted_blocks;
             data_input = block_value;
-            start_key_input = KEY;
             data_input_valid = 1;
             data_input_last = last_block;
 
@@ -173,7 +214,6 @@ module tb_kuz_top;
             @(negedge clk);
             data_input_valid = 0;
             data_input = ~data_input;
-            start_key_input = ~start_key_input;
             data_input_last = !data_input_last;
         end
     endtask
@@ -255,6 +295,7 @@ module tb_kuz_top;
         btn_pulse = 0;
         data_input = 0;
         start_key_input = 0;
+        key_input_valid = 0;
         data_input_valid = 0;
         data_input_last = 0;
 
@@ -263,11 +304,13 @@ module tb_kuz_top;
         cycle_number = 0;
         accepted_cycle = 0;
         accepted_blocks = 0;
+        accepted_keys = 0;
         completed_blocks = 0;
         mode_switches = 0;
 
         begin_test("ENC -> DEC -> ENC, 22 CHARACTERS IN TWO BLOCKS");
         reset_core;
+        load_key(KEY);
         run_block(PLAIN_FIRST, CIPHER_FIRST, 1'b0, ENC_LATENCY);
         first_cipher = data_output;
         run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
@@ -282,7 +325,7 @@ module tb_kuz_top;
         switch_idle_mode;
         run_block(first_plain, first_cipher, 1'b0, ENC_LATENCY);
         run_block(last_plain, last_cipher, 1'b1, ENC_LATENCY);
-        check(accepted_blocks == 6 && completed_blocks == 6 && mode_switches == 2,
+        check(accepted_blocks == 6 && completed_blocks == 6 && mode_switches == 2 && accepted_keys == 1,
               "Round-trip block or mode switch totals mismatch");
         pass_test;
 
@@ -314,7 +357,6 @@ module tb_kuz_top;
         before_accept = accepted_blocks;
         btn_pulse = 1;
         data_input = PLAIN_FIRST;
-        start_key_input = KEY;
         data_input_valid = 1;
         data_input_last = 1;
 
@@ -353,10 +395,11 @@ module tb_kuz_top;
         repeat (DEC_LATENCY + 1) begin
             sample_edge;
             check(data_output_valid === 0 && switch_mode_pulse === 0 &&
-                  busy_all_message === 0 && data_input_ready === 1,
+                  busy_all_message === 0 && data_input_ready === 0 && round_keys_ready === 0,
                   "Aborted operation or deferred request survived reset");
         end
 
+        load_key(KEY);
         run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
         sample_edge;
         check(data_output_valid === 0 && data_input_ready === 1 &&
@@ -364,6 +407,34 @@ module tb_kuz_top;
               "Final result or mode change pulse did not clear");
         check(accepted_blocks == 11 && completed_blocks == 10 && mode_switches == 5,
               "Overall accepted, completed and switched totals mismatch");
+        pass_test;
+
+        begin_test("BLOCK PRIORITY, KEY HELD UNTIL LAST RESULT, NEW CIPHERTEXT");
+        @(negedge clk);
+        before_accept = accepted_blocks;
+        start_key_input = 0;
+        key_input_valid = 1'b1;
+        data_input = PLAIN_FIRST;
+        data_input_valid = 1'b1;
+        data_input_last = 1'b0;
+        sample_edge;
+        check(accepted_blocks == before_accept + 1 && accepted_keys == 2,
+              "Key update took priority over the first block");
+        release_input;
+        expect_result(CIPHER_FIRST, 1'b0, ENC_LATENCY);
+        sample_edge;
+        check(key_input_ready === 0 && accepted_keys == 2 && round_keys_ready === 1,
+              "Key accepted in the gap inside the message");
+
+        run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
+        sample_edge;
+        check(accepted_keys == 3 && round_keys_ready === 0,
+              "Deferred key was not accepted after the last result");
+        @(negedge clk);
+        key_input_valid = 1'b0;
+        wait_for_keys;
+        run_block(128'b0, 128'h98cc6b54dbcf7bd2f0800c1fab0677ef, 1'b1, ENC_LATENCY);
+        check(accepted_keys == 3 && completed_blocks == 13, "Unexpected block or key count");
         pass_test;
 
         $display("\nTESTS PASSED: %0d / %0d", PASSED, TESTS);

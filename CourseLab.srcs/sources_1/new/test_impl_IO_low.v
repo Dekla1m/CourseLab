@@ -8,6 +8,9 @@ module test_impl_IO_low(
     
     input  [31:0] d_input,
     input  [31:0] key_input,
+    input          key_input_valid,
+    output         key_input_ready,
+    output         round_keys_ready,
     output         switch_mode_pulse,
     input          data_input_valid,
     input          data_input_last,
@@ -35,7 +38,10 @@ module test_impl_IO_low(
         .btn_pulse(btn_pulse),       
                          
         .data_input(data_input),      
-        .start_key_input(start_key_input), 
+        .start_key_input(start_key_input),
+        .key_input_valid(key_input_valid),
+        .key_input_ready(key_input_ready),
+        .round_keys_ready(round_keys_ready),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last), 
         .data_input_ready(data_input_ready),

@@ -4,7 +4,7 @@
 
 module tb_decrypt_top;
 
-    localparam integer LATENCY = 43;
+    localparam integer LATENCY = 10;
 
     localparam [255:0] RFC_KEY = 256'h8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef;
     localparam [127:0] RFC_CIPHER = 128'h7f679d90bebc24305a468d42b9d4edcd;
@@ -16,13 +16,38 @@ module tb_decrypt_top;
     localparam [127:0] ZERO_CIPHER = 128'h98cc6b54dbcf7bd2f0800c1fab0677ef;
     localparam [127:0] ONES_CIPHER = 128'h0e697e9f0587a38c908454ac39e1c463;
 
+    // Эталонные наборы для модели банка ключей. K1 занимает старшие 128 бит.
+    localparam [1279:0] RFC_KEYS = {
+        128'h8899aabbccddeeff0011223344556677, 128'hfedcba98765432100123456789abcdef,
+        128'hdb31485315694343228d6aef8cc78c44, 128'h3d4553d8e9cfec6815ebadc40a9ffd04,
+        128'h57646468c44a5e28d3e59246f429f1ac, 128'hbd079435165c6432b532e82834da581b,
+        128'h51e640757e8745de705727265a0098b1, 128'h5a7925017b9fdd3ed72a91a22286f984,
+        128'hbb44e25378c73123a5f32f73cdb6e517, 128'h72e9dd7416bcf45b755dbaa88e4a4043
+    };
+    localparam [1279:0] ZERO_KEYS = {
+        128'h00000000000000000000000000000000, 128'h00000000000000000000000000000000,
+        128'hd7e5947c30b506702a4f8be01e49f157, 128'h374d255d7d0febc6b0205b0ce5916145,
+        128'hc15446aa1feeb6db4806751155e0386e, 128'h718c5e8a75e7186038aeeed50c1fb72d,
+        128'h5bdf9ba55b4668dc436895951b6855cc, 128'h70804dc50f238f839409bcaed4322502,
+        128'h528ba9f04997c2684b01a4944e91c0f1, 128'h491b9222400a7c584f13a7f67a2db897
+    };
+    localparam [1279:0] ONES_KEYS = {
+        128'hffffffffffffffffffffffffffffffff, 128'hffffffffffffffffffffffffffffffff,
+        128'hd474a3450f37ac64c2e6958a056b0da0, 128'h01af6b82631a03261135b1fb30176ae1,
+        128'hbfd23b89d92fc7d9e856f52882cc5002, 128'h0458cfc521197643a8ccb22ca4ac0edc,
+        128'h43a45b1c857cac19d17e0edc85de8c16, 128'h4d4a76637cad83f96cc16e4c12ecc843,
+        128'h966bde626ea2f76bd2e2773db71767df, 128'h465077194bf76002a5ffdc99defe76eb
+    };
+
     reg         clk;
     reg         rst;
     reg [127:0] data_input;
-    reg [255:0] start_key_input;
+    reg [1279:0] test_keys;
+    reg [127:0] round_key_input;
     reg         data_input_valid;
     reg         data_input_last;
 
+    wire [3:0]   round_key_read_index;
     wire         data_input_ready;
     wire [127:0] data_output;
     wire         data_output_valid;
@@ -42,16 +67,25 @@ module tb_decrypt_top;
         .rst(rst),
 
         .data_input(data_input),
-        .start_key_input(start_key_input),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last),
         .data_input_ready(data_input_ready),
+        .round_key_read_index(round_key_read_index),
+        .round_key_input(round_key_input),
 
         .data_output(data_output),
         .data_output_valid(data_output_valid),
         .data_output_last(data_output_last),
         .busy_all_message(busy_all_message)
     );
+
+
+    always @(posedge clk) begin
+        if (rst)
+            round_key_input <= 128'b0;
+        else
+            round_key_input <= test_keys[1279-128*round_key_read_index -: 128];
+    end
 
 
     initial begin
@@ -106,7 +140,11 @@ module tb_decrypt_top;
             @(negedge clk);
             check(data_input_ready === 1'b1, "Core is not ready before request");
             data_input = cipher;
-            start_key_input = key;
+            case (key)
+                RFC_KEY: test_keys = RFC_KEYS;
+                256'b0:  test_keys = ZERO_KEYS;
+                default: test_keys = ONES_KEYS;
+            endcase
             data_input_last = last_block;
             data_input_valid = 1'b1;
 
@@ -122,9 +160,7 @@ module tb_decrypt_top;
             @(negedge clk);
             data_input_valid = 1'b0;
 
-            // Изменение портов после приёма проверяет фиксацию блока, ключа и last.
             data_input = ~data_input;
-            start_key_input = ~start_key_input;
             data_input_last = !data_input_last;
         end
     endtask
@@ -144,19 +180,19 @@ module tb_decrypt_top;
                 @(posedge clk);
                 #0.1;
                 check(data_input_ready === 1'b0 && data_output_valid === 1'b0 &&
-                      busy_all_message === 1'b1, "Result or ready appeared before t43");
+                      busy_all_message === 1'b1, "Result or ready appeared before t10");
                 check(data_output === held_data && data_output_last === held_last,
                       "Output changed before a result");
 
-                if (check_rfc_rounds && elapsed == 34)
+                if (check_rfc_rounds && elapsed == 1)
                     check(dut.round_data_output === RFC_FIRST_INVERSE, "RFC first inverse round mismatch");
-                if (check_rfc_rounds && elapsed == 42)
+                if (check_rfc_rounds && elapsed == 9)
                     check(dut.round_data_output === RFC_LAST_INVERSE, "RFC last inverse round mismatch");
             end
 
             @(posedge clk);
             #0.1;
-            check(data_output_valid === 1'b1 && data_input_ready === 1'b1, "Expected a result on t43");
+            check(data_output_valid === 1'b1 && data_input_ready === 1'b1, "Expected a result on t10");
             check(data_output_last === expected_last && busy_all_message === !expected_last,
                   "Result last or message busy mismatch");
 
@@ -237,7 +273,7 @@ module tb_decrypt_top;
     initial begin
         rst = 1;
         data_input = 0;
-        start_key_input = 0;
+        test_keys = RFC_KEYS;
         data_input_valid = 0;
         data_input_last = 0;
         TESTS = 0;
@@ -277,10 +313,10 @@ module tb_decrypt_top;
         launch_block(RFC_CIPHER, RFC_KEY, 1'b1);
         @(negedge clk);
         data_input = ZERO_CIPHER;
-        start_key_input = 0;
         data_input_last = 1;
         data_input_valid = 1;
         expect_result(RFC_PLAIN, 1'b1, 1'b0);
+        test_keys = ZERO_KEYS;
 
         @(posedge clk);
         check(data_input_valid === 1'b1 && data_input_ready === 1'b1,
@@ -293,16 +329,16 @@ module tb_decrypt_top;
         check_gap(LATENCY + 1, 1'b0);
         pass_test;
 
-        begin_test("RESET DURING KEY EXPANSION");
-        abort_block(8);
+        begin_test("RESET AFTER THE FIRST INVERSE ROUND");
+        abort_block(1);
         pass_test;
 
         begin_test("RESET DURING INVERSE ROUNDS");
-        abort_block(37);
+        abort_block(5);
         pass_test;
 
         begin_test("RESET AT THE RESULT BOUNDARY");
-        abort_block(42);
+        abort_block(9);
         pass_test;
 
         begin_test("NEW BLOCK AFTER RESET");
