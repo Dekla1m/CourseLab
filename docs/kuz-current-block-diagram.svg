@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1588" viewBox="0 0 1600 1588" role="img" aria-labelledby="title desc">
+<title id="title">CourseLab — текущая блок-схема Кузнечика</title>
+<desc id="desc">Тестовая обвязка, Clocking Wizard, формирователь ключей и активный банк, шифратор и дешифратор, конвейеры и дочерние преобразования.</desc>
+<defs><marker id="data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2458a6"/></marker><marker id="key" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#196a58"/></marker><marker id="control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#40536b"/></marker></defs>
+<rect x="0" y="0" width="1600" height="1588" rx="0" fill="#f7f9fc" stroke="none" stroke-width="1.5"/>
+<text x="47" y="49" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">COURSELAB  /  СТРУКТУРА RTL</text>
+<text x="47" y="95" fill="#17263a" font-family="'Segoe UI', Arial, sans-serif" font-size="38" font-weight="700" text-anchor="start">Кузнечик · ENC и DEC</text>
+<text x="48" y="124" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start">Ключевой тракт 100 МГц · тракт данных 200 МГц · Artix-7 XC7A100T</text>
+<rect x="1312" y="66" width="240" height="29" rx="7" fill="#f4f7fb" stroke="none" stroke-width="1.5"/>
+<text x="1432.0" y="86" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle">09.11.2026  ·  Схема по RTL</text>
+<rect x="43" y="146" width="1514" height="624" rx="15" fill="#ffffff" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="66" y="181" fill="#17263a" font-family="'Segoe UI', Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">01   Текущая обвязка test_impl_IO_low</text>
+<text x="66" y="208" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Входы платы — clk, rst и тестовые порты. Обвязка соединяет PLL, загрузчик ключа и kuz_TOP.</text>
+<rect x="76" y="223" width="282" height="82" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="91" y="249" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Вход платы</text>
+<text x="91" y="272" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">clk 100 МГц · rst</text>
+<rect x="403" y="223" width="520" height="82" rx="12" fill="#edf3fc" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="418" y="249" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">clk_wiz_0</text>
+<text x="418" y="272" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">PLL выдаёт clk_out1 = 200 МГц, clk_out2 = 100 МГц и locked.</text>
+<rect x="969" y="223" width="554" height="82" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="984" y="249" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Снятие сброса</text>
+<text x="984" y="272" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">rst или потеря locked → сброс · снятие по фронтам каждого такта.</text>
+<polyline points="358,265 403,265" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<polyline points="923,265 969,265" fill="none" stroke="#40536b" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#control)"/>
+<text x="416" y="324" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500">clk_out1 → kuz_TOP и быстрая сторона загрузчика</text>
+<text x="951" y="324" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500">clk_out2 → медленная сторона и формирователь</text>
+<rect x="76" y="337" width="290" height="101" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="91" y="363" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Вход ключа</text>
+<text x="91" y="386" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">32 бита в тестовой обвязке.</text>
+<text x="91" y="406" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Повтор ×8 → исходный ключ 256 бит.</text>
+<rect x="416" y="337" width="473" height="101" rx="12" fill="#edf7f3" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="431" y="363" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_key_loader</text>
+<text x="874" y="362" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="end">200 ↔ 100 МГц</text>
+<text x="431" y="386" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Фиксирует 256 бит в held_key. Передаёт запрос на 100 МГц.</text>
+<text x="431" y="406" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Возвращает готовые K1…K10 с valid/ready.</text>
+<rect x="951" y="337" width="572" height="101" rx="12" fill="#edf7f3" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="966" y="363" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_key_schedule</text>
+<text x="1508" y="362" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="end">100 МГц</text>
+<text x="966" y="386" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">По принятому запросу разворачивает 256 бит за 33 такта.</text>
+<text x="966" y="406" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выдаёт K1…K10 и признак готовности.</text>
+<polyline points="366,381 416,381" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<polyline points="889,369 951,369" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<polyline points="951,411 889,411" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<rect x="76" y="478" width="1447" height="268" rx="12" fill="#f9fbfe" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="94" y="512" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="23" font-weight="700" text-anchor="start">kuz_TOP</text>
+<text x="223" y="512" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">Выбирает ENC/DEC по btn_pulse, выдаёт busy_all_message и switch_mode_pulse.</text>
+<rect x="1366" y="491" width="138" height="29" rx="7" fill="#edf3fc" stroke="none" stroke-width="1.5"/>
+<text x="1435.0" y="511" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle">200 МГц</text>
+<text x="94" y="557" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500">Смена ключа и режима разрешена между сообщениями.</text>
+<text x="94" y="580" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500">До записи банка и во время расчёта вход блока закрыт.</text>
+<rect x="591" y="532" width="493" height="75" rx="12" fill="#edf7f3" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="606" y="558" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">active_round_keys</text>
+<text x="606" y="581" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Фиксирует все 1280 бит одним фронтом. Общий банк ENC и DEC.</text>
+<polyline points="850,438 850,458 1055,458 1055,532" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<text x="869" y="451" fill="#196a58" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start">K1…K10 · valid/ready</text>
+<polyline points="800,607 800,636" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<rect x="94" y="636" width="244" height="94" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="109" y="662" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Вход блока</text>
+<text x="109" y="685" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">128 бит · valid · last</text>
+<text x="109" y="705" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">32 бита в обвязке, повтор ×4.</text>
+<rect x="369" y="636" width="251" height="94" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="384" y="662" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Входной допуск</text>
+<text x="384" y="685" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Направляет блок по режиму.</text>
+<text x="384" y="705" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Возвращает data_input_ready.</text>
+<rect x="650" y="636" width="310" height="94" rx="12" fill="#edf3fc" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="665" y="662" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Encrypt_TOP / Decrypt_TOP</text>
+<text x="665" y="685" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">ENC — блок → шифротекст.</text>
+<text x="665" y="705" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">DEC — шифротекст → блок.</text>
+<rect x="990" y="636" width="209" height="94" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="1005" y="662" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Выбор результата</text>
+<text x="1005" y="685" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Берёт выход</text>
+<text x="1005" y="705" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">активного тракта.</text>
+<rect x="1231" y="636" width="274" height="94" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="1246" y="662" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">Выход блока</text>
+<text x="1246" y="685" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">128 бит · valid · last</text>
+<text x="1246" y="705" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">В обвязке выведены 32 бита.</text>
+<polyline points="338,682 369,682" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<polyline points="620,682 650,682" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<polyline points="960,682 990,682" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<polyline points="1199,682 1231,682" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="43" y="795" width="744" height="509" rx="15" fill="#ffffff" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="66" y="830" fill="#17263a" font-family="'Segoe UI', Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">02   Развёртывание ключей · 100 МГц</text>
+<text x="66" y="857" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Пять пар K1/K2 … K9/K10. Каждый принятый запрос запускает расчёт.</text>
+<rect x="64" y="880" width="290" height="105" rx="12" fill="#edf7f3" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="79" y="906" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_round_constant</text>
+<text x="79" y="929" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — индекс i, 6 бит.</text>
+<text x="79" y="949" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Таблица фиксированных C1…C32.</text>
+<text x="79" y="969" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — Ci, 128 бит.</text>
+<rect x="392" y="880" width="373" height="105" rx="12" fill="#edf7f3" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="407" y="906" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">key_matrix_onecycle</text>
+<text x="407" y="929" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — A, B, Ci и key_step_enable.</text>
+<text x="407" y="949" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">F = (L(S(A ⊕ Ci)) ⊕ B, A).</text>
+<text x="407" y="969" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — новая пара 256 бит и done.</text>
+<polyline points="354,930 392,930" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<text x="67" y="1017" fill="#196a58" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start">Обратная связь F</text>
+<text x="238" y="1017" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выходная пара становится входом следующего шага.</text>
+<text x="67" y="1041" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Первые K1/K2 берутся из исходного ключа. После каждых 8 шагов сохраняется ещё пара.</text>
+<rect x="64" y="1063" width="701" height="95" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="79" y="1089" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_lsx_matrix_comb</text>
+<text x="79" y="1112" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — A и Ci по 128 бит. XOR, затем S и полная L.</text>
+<text x="79" y="1132" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — 128 бит L(S(A ⊕ Ci)). Его читает F.</text>
+<rect x="64" y="1182" width="328" height="101" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="79" y="1208" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_sbox_comb</text>
+<text x="79" y="1231" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — 128 бит после XOR.</text>
+<text x="79" y="1251" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">S по 16 байтам параллельно.</text>
+<text x="79" y="1271" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — 128 бит после подстановки.</text>
+<rect x="430" y="1182" width="335" height="101" rx="12" fill="#ffffff" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="445" y="1208" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">l_matrix_comb</text>
+<text x="445" y="1231" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — 128 бит после S.</text>
+<text x="445" y="1251" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Полное L = R¹⁶, дерево XOR.</text>
+<text x="445" y="1271" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — линейное преобразование.</text>
+<polyline points="392,1230 430,1230" fill="none" stroke="#196a58" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#key)"/>
+<rect x="813" y="795" width="744" height="509" rx="15" fill="#ffffff" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="836" y="830" fill="#17263a" font-family="'Segoe UI', Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">03   Конвейеры данных · 200 МГц</text>
+<text x="836" y="857" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Два экземпляра общего шаблона. Режим задаётся параметром DECRYPT.</text>
+<rect x="834" y="880" width="702" height="102" rx="12" fill="#edf3fc" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="849" y="906" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">kuz_round_pipeline</text>
+<text x="849" y="929" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — блок 128 бит, valid, last и K1…K10. Девять раундов и финальный XOR.</text>
+<text x="849" y="949" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">ENC: раунды K1…K9, финал K10. DEC: раунды K10…K2, финал K1.</text>
+<text x="849" y="969" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Выход — блок, valid и last через 37 тактов. После заполнения — 1 блок/такт.</text>
+<text x="836" y="1009" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" text-anchor="start">kuz_round_fourcycle</text>
+<text x="836" y="1032" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход — блок и ключ по 128 бит. Выход — 128 бит и done на 4-м фронте.</text>
+<text x="836" y="1062" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">ENC</text>
+<rect x="835" y="1070" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="907.5" y="1092" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">X</text>
+<text x="907.5" y="1110" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">XOR с Ki</text>
+<polyline points="980,1096 1006,1096" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1006" y="1070" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1078.5" y="1092" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">S</text>
+<text x="1078.5" y="1110" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">kuz_sbox_comb</text>
+<polyline points="1151,1096 1177,1096" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1177" y="1070" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1249.5" y="1092" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">R⁸</text>
+<text x="1249.5" y="1110" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">матрица</text>
+<polyline points="1322,1096 1348,1096" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1348" y="1070" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1420.5" y="1092" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">R⁸</text>
+<text x="1420.5" y="1110" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">матрица</text>
+<text x="836" y="1145" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start">DEC</text>
+<rect x="835" y="1153" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="907.5" y="1175" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">X</text>
+<text x="907.5" y="1193" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">XOR с Ki</text>
+<polyline points="980,1179 1006,1179" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1006" y="1153" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1078.5" y="1175" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">R⁻⁸</text>
+<text x="1078.5" y="1193" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">матрица</text>
+<polyline points="1151,1179 1177,1179" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1177" y="1153" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1249.5" y="1175" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">R⁻⁸</text>
+<text x="1249.5" y="1193" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">матрица</text>
+<polyline points="1322,1179 1348,1179" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<rect x="1348" y="1153" width="145" height="52" rx="8" fill="#f4f7fb" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="1420.5" y="1175" fill="#2458a6" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">S⁻¹</text>
+<text x="1420.5" y="1193" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">обратная S</text>
+<text x="836" y="1235" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="650" text-anchor="start">kuz_r8_matrix_comb</text>
+<text x="1046" y="1235" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">128 бит → R⁸ или R⁻⁸ по INVERSE → 128 бит.</text>
+<text x="836" y="1265" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="650" text-anchor="start">kuz_inverse_sbox_comb</text>
+<text x="1067" y="1265" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">128 бит → S⁻¹ по 16 байтам → 128 бит.</text>
+<rect x="43" y="1328" width="1514" height="185" rx="15" fill="#ffffff" stroke="#e0e8f0" stroke-width="1.5"/>
+<text x="66" y="1363" fill="#17263a" font-family="'Segoe UI', Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">04   Внутри Clocking Wizard</text>
+<text x="66" y="1390" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">clk_wiz_0 вызывает сгенерированный clk_wiz_0_clk_wiz. Частоты получаются от одного PLL.</text>
+<rect x="64" y="1406" width="342" height="86" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="79" y="1432" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">IBUF</text>
+<text x="79" y="1455" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Вход clk с пина → внутренний такт 100 МГц.</text>
+<rect x="450" y="1406" width="571" height="86" rx="12" fill="#edf3fc" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="465" y="1432" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">PLLE2_ADV</text>
+<text x="465" y="1455" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Такт, reset и обратная связь → 200/100 МГц, locked, CLKFBOUT.</text>
+<rect x="1064" y="1406" width="472" height="86" rx="12" fill="#f4f7fb" stroke="#b9c8d8" stroke-width="1.5"/>
+<text x="1079" y="1432" fill="#17263a" font-family="Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="650" text-anchor="start">BUFG ×3</text>
+<text x="1079" y="1455" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Два буфера раздают такты. Третий замыкает обратную связь.</text>
+<polyline points="406,1448 450,1448" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<polyline points="1021,1448 1064,1448" fill="none" stroke="#2458a6" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#data)"/>
+<text x="45" y="1544" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">Синие стрелки — данные и такты. Зелёные — ключевой обмен. Пунктир — служебный сигнал.</text>
+<text x="45" y="1567" fill="#40536b" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">UART, FIFO и input/output order относятся к внешнему системному тракту.</text>
+</svg>

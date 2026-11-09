@@ -31,10 +31,7 @@ module kuz_key_schedule (
     wire [127:0] prefetched_Ci;
 
     assign key_input_ready = !rst && !expanding;
-
-    // Повторная передача действующего ключа подтверждается сразу.
-    assign key_update = key_input_valid && key_input_ready &&
-                        (!round_keys_ready || start_key_input != key_pairs[0]);
+    assign key_update = key_input_valid && key_input_ready;
 
     assign key_step_enable  = !rst && expanding && (key_step_count < 6'd32);
     assign round_key_input  = first_key_step ? key_pairs[0] : next_key_state;
