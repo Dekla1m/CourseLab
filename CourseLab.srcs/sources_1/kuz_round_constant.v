@@ -5,7 +5,7 @@
 // Индекс вне диапазона даёт ноль.
 
 module kuz_round_constant (
-    input  wire [5:0]   iteration_index,
+    input       [5:0]   iteration_index,
     output reg  [127:0] iteration_constant
 );
 
@@ -52,5 +52,3 @@ module kuz_round_constant (
     end
 
 endmodule
-
-`default_nettype wire

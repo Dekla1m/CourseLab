@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
 module tb_kuz_key_schedule;
 
@@ -17,15 +16,13 @@ module tb_kuz_key_schedule;
     reg         rst;
     reg [255:0] start_key_input;
     reg         key_input_valid;
-    reg [3:0]   round_key_read_index;
 
     wire         key_input_ready;
     wire         round_keys_ready;
-    wire [127:0] round_key_output;
+    wire [1279:0] round_keys;
 
     integer TESTS;
     integer PASSED;
-    integer index;
 
     kuz_key_schedule dut (
         .clk(clk),
@@ -34,8 +31,7 @@ module tb_kuz_key_schedule;
         .key_input_valid(key_input_valid),
         .key_input_ready(key_input_ready),
         .round_keys_ready(round_keys_ready),
-        .round_key_read_index(round_key_read_index),
-        .round_key_output(round_key_output)
+        .round_keys(round_keys)
     );
 
     initial begin
@@ -106,47 +102,28 @@ module tb_kuz_key_schedule;
         end
     endtask
 
-    task check_key;
-        input [3:0] address;
-        input [127:0] expected;
-        reg [127:0] held;
-        begin
-            @(negedge clk);
-            held = round_key_output;
-            round_key_read_index = address;
-            #0.1;
-            check(round_key_output === held, "Key changed before the read edge");
-            sample_edge;
-            check(round_key_output === expected, "Wrong round key");
-        end
-    endtask
-
-
     initial begin
         rst = 1'b1;
         start_key_input = 0;
         key_input_valid = 1'b0;
-        round_key_read_index = 0;
         TESTS = 0;
         PASSED = 0;
 
-        begin_test("RFC 7801 KEY SET AND SYNCHRONOUS READ");
+        begin_test("RFC 7801 AND PARALLEL KEY BUS");
         sample_edge;
-        check(round_keys_ready === 0 && key_input_ready === 0 && round_key_output === 0,
+        check(round_keys_ready === 0 && key_input_ready === 0 && round_keys === 0,
               "Reset did not clear the schedule");
         @(negedge clk);
         rst = 1'b0;
         send_key(RFC_KEY);
         expect_preparation;
-        for (index = 0; index < 10; index = index + 1)
-            check_key(index, RFC_KEYS[1279-128*index -: 128]);
-        check_key(4'd10, 128'b0);
+        check(round_keys === RFC_KEYS, "Parallel key order or value mismatch");
         pass_test;
 
         begin_test("REPEATED KEY REUSES THE PREPARED SET");
         send_key(RFC_KEY);
         check(round_keys_ready === 1 && key_input_ready === 1, "Repeated key triggered expansion");
-        check_key(4'd9, RFC_KEYS[127:0]);
+        check(round_keys === RFC_KEYS, "Repeated key changed the parallel bus");
         pass_test;
 
         begin_test("RESET DURING REPLACEMENT AND RELOAD");
@@ -156,14 +133,13 @@ module tb_kuz_key_schedule;
         @(negedge clk);
         rst = 1'b1;
         sample_edge;
-        check(round_keys_ready === 0 && key_input_ready === 0 && round_key_output === 0,
+        check(round_keys_ready === 0 && key_input_ready === 0 && round_keys === 0,
               "Reset did not cancel preparation");
         @(negedge clk);
         rst = 1'b0;
         send_key(RFC_KEY);
         expect_preparation;
-        check_key(4'd0, RFC_KEY[255:128]);
-        check_key(4'd9, RFC_KEYS[127:0]);
+        check(round_keys === RFC_KEYS, "Wrong key set after reset");
         pass_test;
 
         $display("\nTESTS PASSED: %0d / %0d", PASSED, TESTS);
@@ -178,5 +154,3 @@ module tb_kuz_key_schedule;
     end
 
 endmodule
-
-`default_nettype wire

@@ -203,7 +203,7 @@ module tb_kuz_top;
             data_input_last = last_block;
 
             sample_edge;
-            check(accepted_blocks == previous_accepts + 1 && data_input_ready === 0 &&
+            check(accepted_blocks == previous_accepts + 1 && data_input_ready === !last_block &&
                   busy_all_message === 1 && data_output_valid === 0,
                   "Block was not accepted exactly once");
         end
@@ -233,7 +233,7 @@ module tb_kuz_top;
             while (cycle_number < result_cycle) begin
                 sample_edge;
                 if (cycle_number < result_cycle) begin
-                    check(data_input_ready === 0 && data_output_valid === 0 &&
+                    check(data_input_ready === !expected_last && data_output_valid === 0 &&
                           busy_all_message === 1 && switch_mode_pulse === 0,
                           "Premature ready, result or mode switch");
                     check(data_output === held_data && data_output_last === held_last,
@@ -262,6 +262,43 @@ module tb_kuz_top;
             launch_block(block_value, last_block);
             release_input;
             expect_result(expected_data, last_block, latency);
+        end
+    endtask
+
+    task run_pair;
+        input [127:0] first_block;
+        input [127:0] last_block;
+        input [127:0] expected_first;
+        input [127:0] expected_last;
+        input integer latency;
+        output [127:0] first_result;
+        output [127:0] last_result;
+        integer first_cycle;
+        begin
+            launch_block(first_block, 1'b0);
+            first_cycle = accepted_cycle;
+            launch_block(last_block, 1'b1);
+            check(accepted_cycle == first_cycle + 1, "The two blocks were not accepted consecutively");
+            release_input;
+
+            while (cycle_number < first_cycle + latency) begin
+                sample_edge;
+                if (cycle_number < first_cycle + latency)
+                    check(data_output_valid === 0, "First result arrived early");
+            end
+
+            check(data_output_valid === 1 && data_output_last === 0 &&
+                  data_output === expected_first && busy_all_message === 1 &&
+                  data_input_ready === 0 && switch_mode_pulse === 0,
+                  "First streaming result mismatch");
+            first_result = data_output;
+
+            sample_edge;
+            check(data_output_valid === 1 && data_output_last === 1 &&
+                  data_output === expected_last && busy_all_message === 0 &&
+                  data_input_ready === 1 && switch_mode_pulse === 0,
+                  "Last streaming result did not follow immediately");
+            last_result = data_output;
         end
     endtask
 
@@ -311,20 +348,16 @@ module tb_kuz_top;
         begin_test("ENC -> DEC -> ENC, 22 CHARACTERS IN TWO BLOCKS");
         reset_core;
         load_key(KEY);
-        run_block(PLAIN_FIRST, CIPHER_FIRST, 1'b0, ENC_LATENCY);
-        first_cipher = data_output;
-        run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
-        last_cipher = data_output;
+        run_pair(PLAIN_FIRST, PLAIN_LAST, CIPHER_FIRST, CIPHER_LAST, ENC_LATENCY,
+                 first_cipher, last_cipher);
 
         switch_idle_mode;
-        run_block(first_cipher, PLAIN_FIRST, 1'b0, DEC_LATENCY);
-        first_plain = data_output;
-        run_block(last_cipher, PLAIN_LAST, 1'b1, DEC_LATENCY);
-        last_plain = data_output;
+        run_pair(first_cipher, last_cipher, PLAIN_FIRST, PLAIN_LAST, DEC_LATENCY,
+                 first_plain, last_plain);
 
         switch_idle_mode;
-        run_block(first_plain, first_cipher, 1'b0, ENC_LATENCY);
-        run_block(last_plain, last_cipher, 1'b1, ENC_LATENCY);
+        run_pair(first_plain, last_plain, CIPHER_FIRST, CIPHER_LAST, ENC_LATENCY,
+                 first_cipher, last_cipher);
         check(accepted_blocks == 6 && completed_blocks == 6 && mode_switches == 2 && accepted_keys == 1,
               "Round-trip block or mode switch totals mismatch");
         pass_test;
@@ -450,5 +483,3 @@ module tb_kuz_top;
     end
 
 endmodule
-
-`default_nettype wire

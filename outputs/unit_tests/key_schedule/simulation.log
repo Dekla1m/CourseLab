@@ -2,8 +2,8 @@
 # xsim v2022.2 (64-bit)
 # SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
 # IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-# Start of session at: Sun Nov  8 18:50:07 2026
-# Process ID: 15124
+# Start of session at: Mon Nov  9 14:32:16 2026
+# Process ID: 8668
 # Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_key_schedule
 # Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
 # Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_key_schedule/simulation.log
@@ -15,7 +15,7 @@ source xsim.dir/test_snapshot/xsim_script.tcl
 Time resolution is 1 ps
 run -all
 
-TEST 1: RFC 7801 KEY SET AND SYNCHRONOUS READ
+TEST 1: RFC 7801 AND PARALLEL KEY BUS
 TEST 1: PASS
 
 TEST 2: REPEATED KEY REUSES THE PREPARED SET
@@ -26,6 +26,6 @@ TEST 3: PASS
 
 TESTS PASSED: 3 / 3
 ALL PASS: kuz_key_schedule; 3 scenarios; prepare=33 cycles
-$finish called at time : 925200 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_kuz_key_schedule.v" Line 171
+$finish called at time : 785200 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_kuz_key_schedule.v" Line 148
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Nov  8 18:50:10 2026...
+INFO: [Common 17-206] Exiting xsim at Mon Nov  9 14:32:18 2026...

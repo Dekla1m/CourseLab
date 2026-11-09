@@ -5,8 +5,8 @@
 // Маска выбирает слагаемые, а XOR-редукция складывает их по модулю 2.
 
 module l_matrix_comb (
-    input  wire [127:0] data_input,
-    output wire [127:0] data_output
+    input  [127:0] data_input,
+    output [127:0] data_output
 );
 
     // Биты результата 0–31.

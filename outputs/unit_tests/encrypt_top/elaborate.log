@@ -11,6 +11,7 @@ Time Resolution for simulation is 1ps
 Compiling module work.l_matrix_comb
 Compiling module work.kuz_lsx_matrix_comb
 Compiling module work.data_matrix_onecycle
+Compiling module work.kuz_round_pipeline_default
 Compiling module work.Encrypt_TOP
 Compiling module work.tb_encrypt_top
 Built simulation snapshot test_snapshot

@@ -16,7 +16,7 @@ module test_impl_IO_low(
     input          data_input_last,
     output         data_input_ready,
     
-    output wire  [31:0]  d_output,
+    output [31:0]  d_output,
     output         data_output_valid,
     output         data_output_last,
     output         busy_all_message

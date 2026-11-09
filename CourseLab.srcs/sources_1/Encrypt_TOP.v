@@ -1,93 +1,42 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
-// Шифрование 128-битного блока за 10 тактов от приёма.
-// Банк ключей выдаёт запрошенный ключ на фронте, начиная с фронта приёма блока.
+// Шифрование 128-битных блоков с готовым набором ключей.
+// Внутри сообщения конвейер принимает по одному блоку за такт.
 
 module Encrypt_TOP (
-    input  wire         clk,
-    input  wire         rst,
+    input           clk,
+    input           rst,
 
-    input  wire [127:0] data_input,
-    input  wire         data_input_valid,
-    input  wire         data_input_last,
-    output wire         data_input_ready,
+    input  [127:0]  data_input,
+    input           data_input_valid,
+    input           data_input_last,
+    output          data_input_ready,
 
-    output wire [3:0]   round_key_read_index,
-    input  wire [127:0] round_key_input,
+    input  [1279:0] round_keys,
 
-    output wire [127:0] data_output,
-    output reg          data_output_valid,
-    output reg          data_output_last,
-    output reg          busy_all_message
+    output [127:0]  data_output,
+    output          data_output_valid,
+    output          data_output_last,
+    output          busy_all_message
 );
 
-    reg         busy;
-    reg         operation_last;
-    reg [3:0]   data_round_index;  // Номер ключа текущего раунда, начиная с нуля.
-    reg [127:0] initial_data;
-    reg [127:0] result_data;
-
-    wire         data_input_accept;
-    wire         data_round_enable;
-    wire         data_round_done;
-    wire [127:0] round_data_input;
-    wire [127:0] round_data_output;
-
-    assign data_input_ready  = !rst && !busy;
-    assign data_input_accept = data_input_valid && data_input_ready;
-    assign data_output       = result_data;
-
-    assign data_round_enable = !rst && busy && (data_round_index != 4'd9);
-    assign round_data_input  = (data_round_index == 4'd0) ? initial_data : round_data_output;
-
-    // На фронте текущего раунда банк уже выдаёт ключ для следующего.
-    assign round_key_read_index = data_round_enable ? data_round_index + 4'd1 : 4'd0;
-
-    data_matrix_onecycle round_data_transform (
+    kuz_round_pipeline #(
+        .DECRYPT(1'b0)
+    ) pipeline (
         .clk(clk),
         .rst(rst),
-        .data_round_enable(data_round_enable),
-        .data_input(round_data_input),
-        .key_input(round_key_input),
-        .data_output(round_data_output),
-        .data_round_done(data_round_done)
+
+        .data_input(data_input),
+        .data_input_valid(data_input_valid),
+        .data_input_last(data_input_last),
+        .data_input_ready(data_input_ready),
+
+        .round_keys(round_keys),
+
+        .data_output(data_output),
+        .data_output_valid(data_output_valid),
+        .data_output_last(data_output_last),
+        .busy_all_message(busy_all_message)
     );
 
-
-    always @(posedge clk) begin
-        if (rst) begin
-            busy              <= 1'b0;
-            busy_all_message  <= 1'b0;
-            operation_last    <= 1'b0;
-            data_round_index  <= 4'd0;
-            initial_data      <= 128'b0;
-            result_data       <= 128'b0;
-            data_output_valid <= 1'b0;
-            data_output_last  <= 1'b0;
-        end else begin
-            data_output_valid <= 1'b0;
-
-            if (data_input_accept) begin
-                busy             <= 1'b1;
-                busy_all_message <= 1'b1;
-                operation_last   <= data_input_last;
-                data_round_index <= 4'd0;
-                initial_data     <= data_input;
-            end else if (data_round_enable) begin
-                data_round_index <= data_round_index + 4'd1;
-            end else if (busy && data_round_done) begin
-                result_data       <= round_data_output ^ round_key_input;
-                data_output_last  <= operation_last;
-                data_output_valid <= 1'b1;
-
-                busy <= 1'b0;
-                if (operation_last)
-                    busy_all_message <= 1'b0;
-            end
-        end
-    end
-
 endmodule
-
-`default_nettype wire

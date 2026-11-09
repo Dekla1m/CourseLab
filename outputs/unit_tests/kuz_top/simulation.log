@@ -2,8 +2,8 @@
 # xsim v2022.2 (64-bit)
 # SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
 # IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-# Start of session at: Sun Nov  8 18:51:06 2026
-# Process ID: 30240
+# Start of session at: Mon Nov  9 14:32:33 2026
+# Process ID: 24392
 # Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_kuz_top
 # Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
 # Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_kuz_top/simulation.log
@@ -32,6 +32,6 @@ TEST 5: PASS
 
 TESTS PASSED: 5 / 5
 ALL PASS: kuz_TOP; 5 scenarios; 13 blocks; ENC=10 DEC=10
-$finish called at time : 2765300 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_kuz_top.v" Line 443
+$finish called at time : 2465300 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_kuz_top.v" Line 476
 exit
-INFO: [Common 17-206] Exiting xsim at Sun Nov  8 18:51:09 2026...
+INFO: [Common 17-206] Exiting xsim at Mon Nov  9 14:32:35 2026...

@@ -2,8 +2,8 @@
 # xsim v2022.2 (64-bit)
 # SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
 # IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-# Start of session at: Mon Nov  2 22:27:48 2026
-# Process ID: 6284
+# Start of session at: Mon Nov  9 14:32:05 2026
+# Process ID: 27256
 # Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_l_onecycle
 # Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
 # Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_l_onecycle/simulation.log
@@ -38,6 +38,6 @@ TEST 7: PASS
 
 TESTS PASSED: 7 / 7
 ALL PASS: L one-cycle; 7 scenarios
-$finish called at time : 92600 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb.v" Line 173
+$finish called at time : 92600 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb.v" Line 172
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Nov  2 22:27:50 2026...
+INFO: [Common 17-206] Exiting xsim at Mon Nov  9 14:32:06 2026...

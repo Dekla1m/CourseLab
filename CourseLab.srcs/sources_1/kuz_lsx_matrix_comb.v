@@ -4,10 +4,10 @@
 // Старший байт расположен в битах [127:120]. Каждый байт остаётся на своей позиции.
 
 module kuz_lsx_matrix_comb (
-    input wire [127:0] data_input,
+    input  [127:0] data_input,
                        key_input,
 
-    output wire [127:0] data_output
+    output [127:0] data_output
 );
 
     wire [127:0] data_after_key_xor = data_input ^ key_input;

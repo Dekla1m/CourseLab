@@ -1,13 +1,12 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
 // Обратное преобразование L в виде матрицы 128 на 128 над GF(2).
 // Маски получены обращением прямой матрицы L и сверены с 16 обратными шагами R.
 // Старший байт остаётся в битах [127:120].
 
 module l_inverse_matrix_comb (
-    input  wire [127:0] data_input,
-    output wire [127:0] data_output
+    input  [127:0] data_input,
+    output [127:0] data_output
 );
 
     // Биты результата 0–31.
@@ -147,5 +146,3 @@ module l_inverse_matrix_comb (
     assign data_output[127]  = ^(data_input & 128'h80e36cbbd82ded80a980ed2dd8bb6ce3);
 
 endmodule
-
-`default_nettype wire

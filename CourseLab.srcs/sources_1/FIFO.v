@@ -1,5 +1,4 @@
 `timescale 1ns/1ps
-`default_nettype none
 
 // Двухтактовый FIFO: запись по write_enable && !full, чтение по read_valid && read_ready.
 // Глубина — степень двойки >= 2. Выходной регистр не добавляет место сверх FIFO_DEPTH:
@@ -13,18 +12,18 @@ module FIFO #(
     parameter WORD_SIZE = 8,
     parameter FIFO_DEPTH = 64
 ) (
-    input  wire                 reset,
+    input                       reset,
 
-    input  wire                 clk_in_write,
-    input  wire [WORD_SIZE-1:0] data_in,
-    input  wire                 write_enable,
-    output wire                 full,
+    input                       clk_in_write,
+    input       [WORD_SIZE-1:0] data_in,
+    input                       write_enable,
+    output                      full,
 
-    input  wire                 clk_in_read,
-    input  wire                 read_ready,
+    input                       clk_in_read,
+    input                       read_ready,
     output reg  [WORD_SIZE-1:0] data_out,
     output reg                  read_valid,
-    output wire                 empty
+    output                      empty
 );
 
     localparam ADDR_WIDTH = $clog2(FIFO_DEPTH);
@@ -153,5 +152,3 @@ module FIFO #(
     end
 
 endmodule
-
-`default_nettype wire

@@ -14,9 +14,11 @@ Compiling module work.kuz_lsx_matrix_comb
 Compiling module work.key_matrix_onecycle
 Compiling module work.kuz_key_schedule
 Compiling module work.data_matrix_onecycle
+Compiling module work.kuz_round_pipeline_default
 Compiling module work.Encrypt_TOP
 Compiling module work.l_inverse_matrix_comb
 Compiling module work.data_inverse_matrix_onecycle
+Compiling module work.kuz_round_pipeline(DECRYPT=1'b1)
 Compiling module work.Decrypt_TOP
 Compiling module work.kuz_TOP
 Compiling module work.tb_kuz_top

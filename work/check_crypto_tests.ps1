@@ -64,17 +64,17 @@ if ($Test -in @('all','key_schedule')) {
     ) 'tb_kuz_key_schedule.v' 'ALL PASS: kuz_key_schedule; 3 scenarios; prepare=33 cycles'
 }
 if ($Test -in @('all','encrypt')) {
-    Run-Test 'encrypt_top' 'tb_encrypt_top' @('l_matrix_comb.v','kuz_lsx_matrix_comb.v','lsx_matrix_onecycle.v','Encrypt_TOP.v') 'tb_encrypt_top.v' 'ALL PASS: Encrypt_TOP;'
+    Run-Test 'encrypt_top' 'tb_encrypt_top' @('l_matrix_comb.v','kuz_lsx_matrix_comb.v','lsx_matrix_onecycle.v','kuz_round_pipeline.v','Encrypt_TOP.v') 'tb_encrypt_top.v' 'ALL PASS: Encrypt_TOP; 5 scenarios; 19 blocks; latency=10'
 }
 if ($Test -in @('all','decrypt')) {
     Run-Test 'decrypt_top' 'tb_decrypt_top' @(
-        'l_inverse_matrix_comb.v', 'data_inverse_matrix_onecycle.v', 'Decrypt_TOP.v'
-    ) 'tb_decrypt_top.v' 'ALL PASS: Decrypt_TOP; 10 scenarios; 8 blocks; latency=10'
+        'l_inverse_matrix_comb.v', 'data_inverse_matrix_onecycle.v', 'kuz_round_pipeline.v', 'Decrypt_TOP.v'
+    ) 'tb_decrypt_top.v' 'ALL PASS: Decrypt_TOP; 5 scenarios; 19 blocks; latency=10'
 }
 if ($Test -in @('all','kuz_top')) {
     Run-Test 'kuz_top' 'tb_kuz_top' @(
         'l_matrix_comb.v', 'kuz_lsx_matrix_comb.v', 'f_matrix_onecycle.v', 'kuz_round_constant.v',
-        'kuz_key_schedule.v', 'lsx_matrix_onecycle.v', 'Encrypt_TOP.v', 'l_inverse_matrix_comb.v',
+        'kuz_key_schedule.v', 'kuz_round_pipeline.v', 'lsx_matrix_onecycle.v', 'Encrypt_TOP.v', 'l_inverse_matrix_comb.v',
         'data_inverse_matrix_onecycle.v', 'Decrypt_TOP.v', 'new/kuz_TOP.v'
     ) 'tb_kuz_top.v' 'ALL PASS: kuz_TOP; 5 scenarios; 13 blocks; ENC=10 DEC=10'
 }

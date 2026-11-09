@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 
 module l_matrix_onecycle (
-    input wire clk,
-    input wire rst,
-    input wire data_input_r,
-    input wire [127:0] data_input,
+    input      clk,
+    input      rst,
+    input      data_input_r,
+    input      [127:0] data_input,
     output reg [127:0] data_output,
     output reg data_output_r
 );

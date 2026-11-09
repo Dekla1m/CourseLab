@@ -1,20 +1,17 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
 // Общий набор раундовых ключей для ENC и DEC.
-// Чтение синхронное. Индекс 0 соответствует K1, индекс 9 соответствует K10.
+// Пары выдаются параллельно от K1 в старших битах до K10 в младших.
 
 module kuz_key_schedule (
-    input  wire         clk,
-    input  wire         rst,
+    input                clk,
+    input                rst,
 
-    input  wire [255:0] start_key_input,
-    input  wire         key_input_valid,
-    output wire         key_input_ready,
-    output reg          round_keys_ready,
-
-    input  wire [3:0]   round_key_read_index,
-    output reg  [127:0] round_key_output
+    input       [255:0]  start_key_input,
+    input                key_input_valid,
+    output               key_input_ready,
+    output reg           round_keys_ready,
+    output      [1279:0] round_keys
 );
 
     reg [255:0] key_pairs [0:4];
@@ -32,7 +29,6 @@ module kuz_key_schedule (
     wire         capture_key_pair;
     wire [5:0]   prefetch_Ci_index;
     wire [127:0] prefetched_Ci;
-    wire [255:0] selected_pair;
 
     assign key_input_ready = !rst && !expanding;
 
@@ -47,7 +43,8 @@ module kuz_key_schedule (
 
     // C1 фиксируется вместе с исходным ключом. Далее таблица опережает F на шаг.
     assign prefetch_Ci_index = key_update ? 6'd1 : key_step_count + 6'd2;
-    assign selected_pair     = key_pairs[round_key_read_index[3:1]];
+    // Набор пригоден для работы после round_keys_ready. На смене ключа вход данных закрыт.
+    assign round_keys = {key_pairs[0], key_pairs[1], key_pairs[2], key_pairs[3], key_pairs[4]};
 
     kuz_round_constant round_constant_lookup (
         .iteration_index(prefetch_Ci_index),
@@ -103,14 +100,4 @@ module kuz_key_schedule (
         end
     end
 
-    always @(posedge clk) begin
-        if (rst || !round_keys_ready || round_key_read_index > 4'd9)
-            round_key_output <= 128'b0;
-        else
-            round_key_output <= round_key_read_index[0] ? selected_pair[127:0] :
-                                                         selected_pair[255:128];
-    end
-
 endmodule
-
-`default_nettype wire

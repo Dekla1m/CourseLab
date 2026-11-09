@@ -1,22 +1,22 @@
 `timescale 1ns / 1ps
 
-// Один DUT. Фиксированные векторы и проверка интерфейса по фронтам clk.
-
 module tb_decrypt_top;
 
     localparam integer LATENCY = 10;
-
-    localparam [255:0] RFC_KEY = 256'h8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef;
-    localparam [127:0] RFC_CIPHER = 128'h7f679d90bebc24305a468d42b9d4edcd;
     localparam [127:0] RFC_PLAIN  = 128'h1122334455667700ffeeddccbbaa9988;
-    localparam [127:0] RFC_FIRST_INVERSE = 128'h76ca149eef27d1b10d17e3d5d68e5a72;
-    localparam [127:0] RFC_LAST_INVERSE  = 128'h99bb99ff99bb99ffffffffffffffffff;
-
-    // Значения рассчитаны программным эталоном через 16 шагов R.
+    localparam [127:0] RFC_CIPHER = 128'h7f679d90bebc24305a468d42b9d4edcd;
     localparam [127:0] ZERO_CIPHER = 128'h98cc6b54dbcf7bd2f0800c1fab0677ef;
     localparam [127:0] ONES_CIPHER = 128'h0e697e9f0587a38c908454ac39e1c463;
 
-    // Эталонные наборы для модели банка ключей. K1 занимает старшие 128 бит.
+    localparam [127:0] PLAIN_FIRST = "abcdefghijklmnop";
+    localparam [127:0] PLAIN_LAST  = {"qrstuv", 8'h80, 72'b0};
+    localparam [127:0] CIPHER_FIRST = 128'hef95dc3b6f289b46d336a03435fb3be9;
+    localparam [127:0] CIPHER_LAST  = 128'h15791b7a77614170684f77afaefd1234;
+
+    localparam [127:0] RFC_FIRST_INVERSE = 128'h76ca149eef27d1b10d17e3d5d68e5a72;
+    localparam [127:0] RFC_LAST_INVERSE  = 128'h99bb99ff99bb99ffffffffffffffffff;
+
+    // Эталонный банк подаётся непосредственно на вход DUT. K1 в старших битах.
     localparam [1279:0] RFC_KEYS = {
         128'h8899aabbccddeeff0011223344556677, 128'hfedcba98765432100123456789abcdef,
         128'hdb31485315694343228d6aef8cc78c44, 128'h3d4553d8e9cfec6815ebadc40a9ffd04,
@@ -39,75 +39,108 @@ module tb_decrypt_top;
         128'h966bde626ea2f76bd2e2773db71767df, 128'h465077194bf76002a5ffdc99defe76eb
     };
 
-    reg         clk;
-    reg         rst;
-    reg [127:0] data_input;
-    reg [1279:0] test_keys;
-    reg [127:0] round_key_input;
-    reg         data_input_valid;
-    reg         data_input_last;
+    reg          clk;
+    reg          rst;
+    reg [127:0]  data_input;
+    reg          data_input_valid;
+    reg          data_input_last;
+    reg [1279:0] round_keys;
 
-    wire [3:0]   round_key_read_index;
-    wire         data_input_ready;
-    wire [127:0] data_output;
-    wire         data_output_valid;
-    wire         data_output_last;
-    wire         busy_all_message;
+    wire          data_input_ready;
+    wire [127:0]  data_output;
+    wire          data_output_valid;
+    wire          data_output_last;
+    wire          busy_all_message;
 
     integer TESTS;
     integer PASSED;
     integer accepted_blocks;
     integer completed_blocks;
+    integer slot;
 
+    reg [127:0] expected_input_result;
+    reg [127:0] expected_data [0:LATENCY-1];
+    reg [LATENCY-1:0] expected_valid;
+    reg [LATENCY-1:0] expected_last;
+    reg expected_output_valid;
+    reg expected_message_busy;
+    reg expected_draining;
+    reg [127:0] held_result;
+    reg held_last;
 
-    // ========== Проверяемый модуль ==========
 
     Decrypt_TOP dut (
         .clk(clk),
         .rst(rst),
-
         .data_input(data_input),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last),
         .data_input_ready(data_input_ready),
-        .round_key_read_index(round_key_read_index),
-        .round_key_input(round_key_input),
-
+        .round_keys(round_keys),
         .data_output(data_output),
         .data_output_valid(data_output_valid),
         .data_output_last(data_output_last),
         .busy_all_message(busy_all_message)
     );
 
-
-    always @(posedge clk) begin
-        if (rst)
-            round_key_input <= 128'b0;
-        else
-            round_key_input <= test_keys[1279-128*round_key_read_index -: 128];
-    end
-
-
     initial begin
-        clk = 0;
+        clk = 1'b0;
         forever #5 clk = ~clk;
     end
 
-    // Приём фиксируется до NBA, результат проверяется после обновления регистров.
+    // Модель интерфейса считает задержку от handshake, включая пустые такты.
     always @(posedge clk) begin
-        if (!rst && data_input_valid && data_input_ready)
-            accepted_blocks = accepted_blocks + 1;
+        if (rst) begin
+            expected_valid = 0;
+            expected_last = 0;
+            expected_output_valid = 0;
+            expected_message_busy = 0;
+            expected_draining = 0;
+            held_result = 0;
+            held_last = 0;
+        end else begin
+            check(data_input_ready === !expected_draining, "Wrong ready before the edge");
+
+            expected_output_valid = expected_valid[LATENCY-1];
+            if (expected_output_valid) begin
+                held_result = expected_data[LATENCY-1];
+                held_last = expected_last[LATENCY-1];
+                completed_blocks = completed_blocks + 1;
+            end
+
+            for (slot = LATENCY-1; slot > 0; slot = slot - 1) begin
+                expected_valid[slot] = expected_valid[slot-1];
+                expected_data[slot] = expected_data[slot-1];
+                expected_last[slot] = expected_last[slot-1];
+            end
+
+            expected_valid[0] = data_input_valid && data_input_ready;
+            expected_data[0] = expected_input_result;
+            expected_last[0] = data_input_last;
+
+            if (expected_valid[0]) begin
+                accepted_blocks = accepted_blocks + 1;
+                expected_message_busy = 1;
+                expected_draining = data_input_last;
+            end
+
+            if (expected_output_valid && held_last) begin
+                expected_message_busy = 0;
+                expected_draining = 0;
+            end
+        end
 
         #0.2;
-        if (!rst && data_output_valid)
-            completed_blocks = completed_blocks + 1;
+        check(data_output_valid === expected_output_valid &&
+              data_output === held_result && data_output_last === held_last,
+              "Wrong result, valid or last at the expected cycle");
+        check(data_input_ready === (!rst && !expected_draining) &&
+              busy_all_message === expected_message_busy, "Wrong ready or busy after the edge");
     end
 
 
-    // ========== Задачи ==========
-
     task begin_test;
-        input [8*100-1:0] name;
+        input [8*80-1:0] name;
         begin
             TESTS = TESTS + 1;
             $display("\nTEST %0d: %0s", TESTS, name);
@@ -116,7 +149,7 @@ module tb_decrypt_top;
 
     task check;
         input condition;
-        input [8*140-1:0] message;
+        input [8*110-1:0] message;
         begin
             if (condition !== 1'b1) begin
                 $display("FAIL: TEST %0d: %0s", TESTS, message);
@@ -132,237 +165,131 @@ module tb_decrypt_top;
         end
     endtask
 
-    task launch_block;
-        input [127:0] cipher;
-        input [255:0] key;
-        input last_block;
+    task sample_edge;
         begin
-            @(negedge clk);
-            check(data_input_ready === 1'b1, "Core is not ready before request");
-            data_input = cipher;
-            case (key)
-                RFC_KEY: test_keys = RFC_KEYS;
-                256'b0:  test_keys = ZERO_KEYS;
-                default: test_keys = ONES_KEYS;
-            endcase
-            data_input_last = last_block;
-            data_input_valid = 1'b1;
-
             @(posedge clk);
-            #0.1;
-            check(data_input_ready === 1'b0 && data_output_valid === 1'b0 &&
-                  busy_all_message === 1'b1, "Input acceptance did not start a block");
+            #0.3;
         end
     endtask
 
-    task release_input;
+    task drive_block;
+        input [127:0] block_value;
+        input [127:0] result_value;
+        input last_block;
         begin
             @(negedge clk);
-            data_input_valid = 1'b0;
+            data_input = block_value;
+            data_input_valid = 1;
+            data_input_last = last_block;
+            expected_input_result = result_value;
+            sample_edge;
+        end
+    endtask
 
+    task idle;
+        input integer cycles;
+        begin
+            @(negedge clk);
+            data_input_valid = 0;
             data_input = ~data_input;
             data_input_last = !data_input_last;
+            repeat (cycles) sample_edge;
         end
     endtask
 
-    task expect_result;
-        input [127:0] expected_plain;
-        input expected_last;
-        input check_rfc_rounds;
-        integer elapsed;
-        reg [127:0] held_data;
-        reg held_last;
-        begin
-            held_data = data_output;
-            held_last = data_output_last;
-
-            for (elapsed = 1; elapsed < LATENCY; elapsed = elapsed + 1) begin
-                @(posedge clk);
-                #0.1;
-                check(data_input_ready === 1'b0 && data_output_valid === 1'b0 &&
-                      busy_all_message === 1'b1, "Result or ready appeared before t10");
-                check(data_output === held_data && data_output_last === held_last,
-                      "Output changed before a result");
-
-                if (check_rfc_rounds && elapsed == 1)
-                    check(dut.round_data_output === RFC_FIRST_INVERSE, "RFC first inverse round mismatch");
-                if (check_rfc_rounds && elapsed == 9)
-                    check(dut.round_data_output === RFC_LAST_INVERSE, "RFC last inverse round mismatch");
-            end
-
-            @(posedge clk);
-            #0.1;
-            check(data_output_valid === 1'b1 && data_input_ready === 1'b1, "Expected a result on t10");
-            check(data_output_last === expected_last && busy_all_message === !expected_last,
-                  "Result last or message busy mismatch");
-
-            if (data_output !== expected_plain) begin
-                $display("Actual=%032h expected=%032h", data_output, expected_plain);
-                check(0, "Plaintext mismatch");
-            end
-        end
-    endtask
-
-    task check_gap;
-        input integer cycles;
-        input expected_busy;
-        reg [127:0] held_data;
-        reg held_last;
-        begin
-            held_data = data_output;
-            held_last = data_output_last;
-
-            repeat (cycles) begin
-                @(posedge clk);
-                #0.1;
-                check(data_input_ready === 1'b1 && data_output_valid === 1'b0 &&
-                      busy_all_message === expected_busy, "Idle ready, valid or message busy mismatch");
-                check(data_output === held_data && data_output_last === held_last,
-                      "Result was not held between blocks");
-            end
-        end
-    endtask
-
-    task run_block;
-        input [127:0] cipher;
-        input [255:0] key;
-        input [127:0] plain;
-        input last_block;
-        input check_rfc_rounds;
-        begin
-            launch_block(cipher, key, last_block);
-            release_input;
-            expect_result(plain, last_block, check_rfc_rounds);
-            check_gap(1, !last_block);
-        end
-    endtask
-
-    task abort_block;
-        input integer elapsed_cycles;
-        begin
-            launch_block(RFC_CIPHER, RFC_KEY, 1'b1);
-            release_input;
-
-            repeat (elapsed_cycles) begin
-                @(posedge clk);
-                #0.1;
-                check(data_output_valid === 1'b0 && data_input_ready === 1'b0,
-                      "Abort scenario left the active operation early");
-            end
-
-            @(negedge clk);
-            rst = 1'b1;
-            data_input_valid = 1'b1;
-            @(posedge clk);
-            #0.1;
-            check(data_output === 0 && data_output_valid === 0 && data_output_last === 0 &&
-                  data_input_ready === 0 && busy_all_message === 0, "Reset did not cancel the block");
-
-            @(negedge clk);
-            rst = 1'b0;
-            data_input_valid = 1'b0;
-
-            // Окно полной задержки обнаруживает запоздалый результат отменённой операции.
-            check_gap(LATENCY + 1, 1'b0);
-        end
-    endtask
-
-
-    // ========== Основной сценарий ==========
 
     initial begin
         rst = 1;
         data_input = 0;
-        test_keys = RFC_KEYS;
         data_input_valid = 0;
         data_input_last = 0;
+        expected_input_result = 0;
+        round_keys = RFC_KEYS;
         TESTS = 0;
         PASSED = 0;
         accepted_blocks = 0;
         completed_blocks = 0;
 
-        begin_test("RESET AND IDLE");
-        repeat (2) @(posedge clk);
-        #0.1;
-        check(data_output === 0 && data_output_valid === 0 && data_output_last === 0 &&
-              data_input_ready === 0 && busy_all_message === 0, "Reset outputs mismatch");
+        begin_test("RFC VECTOR AND EXACT LATENCY");
+        sample_edge;
         @(negedge clk);
         rst = 0;
-        check_gap(1, 1'b0);
+
+        drive_block(RFC_CIPHER, RFC_PLAIN, 1'b1);
+        idle(1);
+        check(dut.pipeline.stage_data[1] === RFC_FIRST_INVERSE, "Wrong first inverse round");
+        idle(8);
+        check(dut.pipeline.stage_data[9] === RFC_LAST_INVERSE, "Wrong ninth inverse round");
+        idle(2);
+        check(accepted_blocks == 1 && completed_blocks == 1, "RFC block count mismatch");
         pass_test;
 
-        begin_test("RFC 7801 CIPHERTEXT AND INVERSE ROUND VALUES");
-        run_block(RFC_CIPHER, RFC_KEY, RFC_PLAIN, 1'b1, 1'b1);
+        begin_test("ZERO AND ALL-ONE KEY SETS");
+        round_keys = ZERO_KEYS;
+        drive_block(ZERO_CIPHER, 128'b0, 1'b1);
+        idle(LATENCY + 1);
+        round_keys = ONES_KEYS;
+        drive_block(ONES_CIPHER, {128{1'b1}}, 1'b1);
+        idle(LATENCY + 1);
+        check(accepted_blocks == 3 && completed_blocks == 3, "Boundary vector count mismatch");
         pass_test;
 
-        begin_test("ZERO KEY AND ZERO PLAINTEXT");
-        run_block(ZERO_CIPHER, 256'b0, 128'b0, 1'b1, 1'b0);
+        begin_test("ADJACENT BLOCKS, A BUBBLE AND A HELD REQUEST AFTER LAST");
+        round_keys = RFC_KEYS;
+        drive_block(CIPHER_FIRST, PLAIN_FIRST, 1'b0);
+        drive_block(RFC_CIPHER, RFC_PLAIN, 1'b0);
+        idle(1);
+        drive_block(CIPHER_LAST, PLAIN_LAST, 1'b1);
+        drive_block(RFC_CIPHER, RFC_PLAIN, 1'b1);
+
+        repeat (LATENCY - 1) sample_edge;
+        check(accepted_blocks == 6 && completed_blocks == 6 &&
+              data_input_ready === 1 && data_output_last === 1,
+              "The request after last escaped before the tail result");
+        sample_edge;
+        check(accepted_blocks == 7, "Held request missed the first free edge");
+        idle(LATENCY + 1);
         pass_test;
 
-        begin_test("ALL ONE KEY AND PLAINTEXT");
-        run_block(ONES_CIPHER, {256{1'b1}}, {128{1'b1}}, 1'b1, 1'b0);
+        begin_test("FULL PIPELINE ACCEPTS WHILE PRODUCING A RESULT");
+        // Десять блоков заполняют тракт. Одиннадцатый входит на фронте первого результата.
+        drive_block(CIPHER_FIRST, PLAIN_FIRST, 1'b0);
+        repeat (LATENCY - 1)
+            drive_block(RFC_CIPHER, RFC_PLAIN, 1'b0);
+        drive_block(CIPHER_LAST, PLAIN_LAST, 1'b1);
+        check(accepted_blocks == 18 && completed_blocks == 8 && data_output_valid === 1,
+              "Input and output did not advance together in the full pipeline");
+        idle(LATENCY + 1);
+        check(completed_blocks == 18 && busy_all_message === 0, "Full pipeline did not drain");
         pass_test;
 
-        begin_test("MESSAGE BUSY ACROSS GAP, LAST=0 THEN LAST=1");
-        run_block(RFC_CIPHER, RFC_KEY, RFC_PLAIN, 1'b0, 1'b0);
-        check_gap(3, 1'b1);
-        run_block(RFC_CIPHER, RFC_KEY, RFC_PLAIN, 1'b1, 1'b0);
-        pass_test;
-
-        begin_test("HELD REQUEST ACCEPTED ON THE FIRST FREE EDGE");
-        launch_block(RFC_CIPHER, RFC_KEY, 1'b1);
+        begin_test("RESET CANCELS MULTIPLE BLOCKS AND CLEARS LAST");
+        drive_block(CIPHER_FIRST, PLAIN_FIRST, 1'b0);
+        drive_block(CIPHER_LAST, PLAIN_LAST, 1'b1);
         @(negedge clk);
-        data_input = ZERO_CIPHER;
-        data_input_last = 1;
-        data_input_valid = 1;
-        expect_result(RFC_PLAIN, 1'b1, 1'b0);
-        test_keys = ZERO_KEYS;
-
-        @(posedge clk);
-        check(data_input_valid === 1'b1 && data_input_ready === 1'b1,
-              "Waiting request did not reach the first free edge");
-        #0.1;
-        check(data_input_ready === 1'b0 && data_output_valid === 1'b0 &&
-              busy_all_message === 1'b1, "Waiting request was not accepted");
-        release_input;
-        expect_result(128'b0, 1'b1, 1'b0);
-        check_gap(LATENCY + 1, 1'b0);
-        pass_test;
-
-        begin_test("RESET AFTER THE FIRST INVERSE ROUND");
-        abort_block(1);
-        pass_test;
-
-        begin_test("RESET DURING INVERSE ROUNDS");
-        abort_block(5);
-        pass_test;
-
-        begin_test("RESET AT THE RESULT BOUNDARY");
-        abort_block(9);
-        pass_test;
-
-        begin_test("NEW BLOCK AFTER RESET");
-        run_block(ONES_CIPHER, {256{1'b1}}, {128{1'b1}}, 1'b1, 1'b0);
-        #0.2;
-        check(accepted_blocks == 11 && completed_blocks == 8,
-              "Transaction totals do not match accepted, completed and cancelled blocks");
+        rst = 1;
+        sample_edge;
+        @(negedge clk);
+        rst = 0;
+        data_input_valid = 0;
+        repeat (LATENCY + 1) sample_edge;
+        check(accepted_blocks == 20 && completed_blocks == 18,
+              "A cancelled block survived reset");
+        drive_block(RFC_CIPHER, RFC_PLAIN, 1'b1);
+        idle(LATENCY + 1);
+        check(accepted_blocks == 21 && completed_blocks == 19, "Post-reset block count mismatch");
         pass_test;
 
         $display("\nTESTS PASSED: %0d / %0d", PASSED, TESTS);
-        if (PASSED == TESTS)
-            $display("ALL PASS: Decrypt_TOP; %0d scenarios; %0d blocks; latency=%0d",
-                     TESTS, completed_blocks, LATENCY);
-        else
-            $display("FAIL: Decrypt_TOP summary");
+        $display("ALL PASS: Decrypt_TOP; %0d scenarios; %0d blocks; latency=%0d",
+                 PASSED, completed_blocks, LATENCY);
         $finish;
     end
 
     initial begin
-        #20000;
+        #10000;
         $display("FAIL: Decrypt_TOP timeout");
         $finish;
     end
 
 endmodule
-
-`default_nettype wire

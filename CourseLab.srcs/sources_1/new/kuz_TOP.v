@@ -1,26 +1,25 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
 module kuz_TOP(
-    input  wire         clk,
-    input  wire         rst,
+    input          clk,
+    input          rst,
 
-    input  wire         btn_pulse,
+    input          btn_pulse,
 
-    input  wire [255:0] start_key_input,
-    input  wire         key_input_valid,
-    output wire         key_input_ready,
-    output wire         round_keys_ready,
+    input  [255:0] start_key_input,
+    input          key_input_valid,
+    output         key_input_ready,
+    output         round_keys_ready,
 
-    input  wire [127:0] data_input,
-    input  wire         data_input_valid,
-    input  wire         data_input_last,
-    output wire         data_input_ready,
+    input  [127:0] data_input,
+    input          data_input_valid,
+    input          data_input_last,
+    output         data_input_ready,
 
-    output wire [127:0] data_output,
-    output wire         data_output_valid,
-    output wire         data_output_last,
-    output wire         busy_all_message,
+    output [127:0] data_output,
+    output         data_output_valid,
+    output         data_output_last,
+    output         busy_all_message,
 
     output reg switch_mode_pulse // Импульс при смене ENC/DEC.
     );
@@ -36,10 +35,7 @@ module kuz_TOP(
     wire dec_input_valid;
     wire key_load_allowed;
     wire schedule_ready;
-    wire [3:0] enc_round_key_index;
-    wire [3:0] dec_round_key_index;
-    wire [3:0] round_key_read_index;
-    wire [127:0] round_key;
+    wire [1279:0] round_keys;
 
     assign enc_input_valid = data_input_valid && round_keys_ready && !switch_now && !mode_dec;
     assign dec_input_valid = data_input_valid && round_keys_ready && !switch_now &&  mode_dec;
@@ -53,7 +49,6 @@ module kuz_TOP(
     // Новый набор разрешён между сообщениями. Первый принимаемый блок имеет приоритет.
     assign key_load_allowed = !busy_all_message && !(data_input_valid && data_input_ready);
     assign key_input_ready  = schedule_ready && key_load_allowed;
-    assign round_key_read_index = mode_dec ? dec_round_key_index : enc_round_key_index;
 
     kuz_key_schedule key_schedule (
         .clk(clk),
@@ -64,8 +59,7 @@ module kuz_TOP(
         .key_input_ready(schedule_ready),
         .round_keys_ready(round_keys_ready),
 
-        .round_key_read_index(round_key_read_index),
-        .round_key_output(round_key)
+        .round_keys(round_keys)
     );
 
 
@@ -78,8 +72,7 @@ module kuz_TOP(
         .data_input_last(data_input_last),
         .data_input_ready(enc_ready),
 
-        .round_key_read_index(enc_round_key_index),
-        .round_key_input(round_key),
+        .round_keys(round_keys),
 
         .data_output(enc_data),
         .data_output_valid(enc_valid),
@@ -97,8 +90,7 @@ module kuz_TOP(
         .data_input_last(data_input_last),
         .data_input_ready(dec_ready),
 
-        .round_key_read_index(dec_round_key_index),
-        .round_key_input(round_key),
+        .round_keys(round_keys),
 
         .data_output(dec_data),
         .data_output_valid(dec_valid),
@@ -127,5 +119,3 @@ module kuz_TOP(
     end
 
 endmodule
-
-`default_nettype wire

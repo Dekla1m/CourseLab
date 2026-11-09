@@ -1,16 +1,15 @@
 `timescale 1ns / 1ps
-`default_nettype none
 
 // Один обратный раунд. Сначала XOR с Ki, затем L в обратном направлении и S-1.
 // Разрешение фиксирует результат на фронте. Между запусками результат удерживается.
 
 module data_inverse_matrix_onecycle (
-    input  wire         clk,
-    input  wire         rst,
-    input  wire         data_round_enable,
+    input               clk,
+    input               rst,
+    input               data_round_enable,
 
-    input  wire [127:0] data_input,
-    input  wire [127:0] key_input,
+    input       [127:0] data_input,
+    input       [127:0] key_input,
 
     output reg  [127:0] data_output,
     output reg          data_round_done
@@ -318,5 +317,3 @@ module data_inverse_matrix_onecycle (
     end
 
 endmodule
-
-`default_nettype wire

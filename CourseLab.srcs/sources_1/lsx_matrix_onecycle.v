@@ -5,11 +5,11 @@
 // data_round_done отмечает записанный результат и может быть высоким несколько тактов подряд.
 
 module data_matrix_onecycle (
-    input wire         clk,
+    input              clk,
                        rst,
                        data_round_enable,
 
-    input wire [127:0] data_input,
+    input      [127:0] data_input,
                        key_input,
 
     output reg [127:0] data_output,

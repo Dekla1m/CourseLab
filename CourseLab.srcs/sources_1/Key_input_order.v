@@ -13,7 +13,7 @@ module Key_input_order(
     output reg [255:0] key,
     output reg key_valid, 
     output reg key_noerr,
-    output wire TX_READY
+    output     TX_READY
     );
 
     localparam IDLE = 0, KEY_BIT_INPUT = 1,
