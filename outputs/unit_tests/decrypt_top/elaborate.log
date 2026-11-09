@@ -8,8 +8,9 @@ Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
-Compiling module work.l_inverse_matrix_comb
-Compiling module work.data_inverse_matrix_onecycle
+Compiling module work.kuz_r8_matrix_comb(INVERSE=1'b1)
+Compiling module work.kuz_inverse_sbox_comb
+Compiling module work.kuz_round_fourcycle(DECRYPT=1'b1...
 Compiling module work.kuz_round_pipeline(DECRYPT=1'b1)
 Compiling module work.Decrypt_TOP
 Compiling module work.tb_decrypt_top

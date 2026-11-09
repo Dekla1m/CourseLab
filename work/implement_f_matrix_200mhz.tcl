@@ -2,13 +2,13 @@ set root [file normalize [file join [file dirname [info script]] ..]]
 set results [file join $root outputs f_matrix_200mhz]
 file mkdir $results
 create_project -in_memory -part xc7a100tcsg324-1
-read_verilog [file join $root CourseLab.srcs sources_1 l_matrix_onecycle.v]
+read_verilog [file join $root CourseLab.srcs experiments l_matrix_onecycle.v]
 read_verilog [file join $root CourseLab.srcs sources_1 l_matrix_comb.v]
 read_verilog [file join $root CourseLab.srcs sources_1 kuz_lsx_matrix_comb.v]
 read_verilog [file join $root CourseLab.srcs sources_1 lsx_matrix_onecycle.v]
 read_verilog [file join $root CourseLab.srcs sources_1 f_matrix_onecycle.v]
-read_verilog [file join $root work f_matrix_benchmark.v]
-read_xdc [file join $root work f_matrix_benchmark.xdc]
+read_verilog [file join $root CourseLab.srcs experiments f_matrix_benchmark.v]
+read_xdc [file join $root CourseLab.srcs experiments f_matrix_benchmark.xdc]
 synth_design -top f_matrix_benchmark -part xc7a100tcsg324-1 -mode out_of_context
 report_utilization -file [file join $results utilization_synth.rpt]
 opt_design

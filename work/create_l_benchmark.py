@@ -3,9 +3,9 @@ import random
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "CourseLab.srcs/sources_1/l_matrix_onecycle.v"
-TB = ROOT / "CourseLab.srcs/sim_1/tb.v"
-BACKUP = ROOT / "work/tb_before_L_counter.v"
+SOURCE = ROOT / "CourseLab.srcs/experiments/l_matrix_onecycle.v"
+TB = ROOT / "CourseLab.srcs/experiments/tb.v"
+BACKUP = ROOT / "CourseLab.srcs/experiments/tb_before_L_counter.v"
 COEFFICIENTS = (148,32,133,16,194,192,1,251,1,192,194,16,133,32,148,1)
 
 def multiply(a,b):

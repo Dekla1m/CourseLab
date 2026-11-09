@@ -19,9 +19,42 @@ module data_inverse_matrix_onecycle (
     wire [127:0] data_after_inverse_l;
     wire [127:0] data_after_inverse_s;
 
+    // ========== Комбинационный обратный раунд ==========
 
-    // ========== Обратная подстановка одного байта ==========
+    l_inverse_matrix_comb inverse_linear_transform (
+        .data_input(data_after_key_xor),
+        .data_output(data_after_inverse_l)
+    );
 
+    kuz_inverse_sbox_comb substitution (
+        .data_input(data_after_inverse_l),
+        .data_output(data_after_inverse_s)
+    );
+
+
+    always @(posedge clk) begin
+        if (rst) begin
+            data_output     <= 128'b0;
+            data_round_done <= 1'b0;
+        end else begin
+            data_round_done <= data_round_enable;
+
+            if (data_round_enable)
+                data_output <= data_after_inverse_s;
+        end
+    end
+
+endmodule
+
+
+// Обратная подстановка S-1. Фиксированные срезы сохраняют порядок байтов.
+
+module kuz_inverse_sbox_comb (
+    input  [127:0] data_input,
+    output [127:0] data_output
+);
+
+    // Неопределённое значение байта распространяет X в симуляции.
     function automatic [7:0] inverse_substitute_byte;
         input [7:0] byte_input;
         begin
@@ -287,33 +320,11 @@ module data_inverse_matrix_onecycle (
         end
     endfunction
 
-
-    // ========== Комбинационный обратный раунд ==========
-
-    l_inverse_matrix_comb inverse_linear_transform (
-        .data_input(data_after_key_xor),
-        .data_output(data_after_inverse_l)
-    );
-
     genvar byte_index;
     generate
-        for (byte_index = 0; byte_index < 16; byte_index = byte_index + 1) begin : inverse_substitutions
-            assign data_after_inverse_s[8 * byte_index +: 8] =
-                inverse_substitute_byte(data_after_inverse_l[8 * byte_index +: 8]);
+        for (byte_index = 0; byte_index < 16; byte_index = byte_index + 1) begin : bytes
+            assign data_output[8*byte_index +: 8] = inverse_substitute_byte(data_input[8*byte_index +: 8]);
         end
     endgenerate
-
-
-    always @(posedge clk) begin
-        if (rst) begin
-            data_output     <= 128'b0;
-            data_round_done <= 1'b0;
-        end else begin
-            data_round_done <= data_round_enable;
-
-            if (data_round_enable)
-                data_output <= data_after_inverse_s;
-        end
-    end
 
 endmodule

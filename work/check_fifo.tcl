@@ -2,7 +2,7 @@ set root [file normalize [file join [file dirname [info script]] ..]]
 set tests [file join $root work fifo_tests]
 create_project -force fifo_original [file join $tests original] -part xc7a100tcsg324-1
 add_files [file join $tests FIFO_original.v]
-add_files -fileset sim_1 [file join $root CourseLab.srcs sim_1 tb_fifo_original.v]
+add_files -fileset sim_1 [file join $root CourseLab.srcs experiments tb_fifo_original.v]
 set_property top tb_fifo_original [get_filesets sim_1]
 set_property xsim.simulate.runtime all [get_filesets sim_1]
 launch_simulation -mode behavioral

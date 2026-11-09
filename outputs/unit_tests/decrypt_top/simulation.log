@@ -2,8 +2,8 @@
 # xsim v2022.2 (64-bit)
 # SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
 # IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
-# Start of session at: Mon Nov  9 14:32:27 2026
-# Process ID: 27604
+# Start of session at: Mon Nov  9 17:12:18 2026
+# Process ID: 7220
 # Current directory: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_decrypt_top
 # Command line: xsim.exe -log simulation.log -mode tcl -source {xsim.dir/test_snapshot/xsim_script.tcl}
 # Log file: C:/Users/cosmo/VivadoProjects/CourseLab/work/sim_unit_crypto_decrypt_top/simulation.log
@@ -31,7 +31,7 @@ TEST 5: RESET CANCELS MULTIPLE BLOCKS AND CLEARS LAST
 TEST 5: PASS
 
 TESTS PASSED: 5 / 5
-ALL PASS: Decrypt_TOP; 5 scenarios; 19 blocks; latency=10
-$finish called at time : 1115300 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_decrypt_top.v" Line 287
+ALL PASS: Decrypt_TOP; 5 scenarios; 46 blocks; latency=37
+$finish called at time : 1772800 ps : File "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/sim_1/tb_decrypt_top.v" Line 289
 exit
-INFO: [Common 17-206] Exiting xsim at Mon Nov  9 14:32:29 2026...
+INFO: [Common 17-206] Exiting xsim at Mon Nov  9 17:12:20 2026...

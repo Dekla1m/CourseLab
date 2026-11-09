@@ -8,7 +8,8 @@ if {$opened_here} {
 set old_top [get_property top [get_filesets sources_1]]
 set old_sim [get_property name [current_fileset -simset]]
 foreach name {l_matrix_comb l_matrix_onecycle kuz_lsx_matrix_comb lsx_matrix_onecycle f_matrix_onecycle} {
-    set source_file [file join $root CourseLab.srcs sources_1 ${name}.v]
+    set folder [expr {$name eq "l_matrix_onecycle" ? "experiments" : "sources_1"}]
+    set source_file [file join $root CourseLab.srcs $folder ${name}.v]
     if {[llength [get_files -quiet -of_objects [get_filesets sources_1] $source_file]] == 0} {
         add_files -norecurse -fileset sources_1 $source_file
     }
@@ -26,7 +27,8 @@ current_fileset -simset [get_filesets $old_sim]
 # HDL compilation and simulation are checked by check_matrix_round.ps1.
 # Here validate project registration without changing the selected source run.
 foreach name {l_matrix_comb l_matrix_onecycle kuz_lsx_matrix_comb lsx_matrix_onecycle f_matrix_onecycle} {
-    set source_file [file join $root CourseLab.srcs sources_1 ${name}.v]
+    set folder [expr {$name eq "l_matrix_onecycle" ? "experiments" : "sources_1"}]
+    set source_file [file join $root CourseLab.srcs $folder ${name}.v]
     if {[llength [get_files -quiet -of_objects [get_filesets sources_1] $source_file]] != 1} {
         error "Expected exactly one project entry for $name"
     }

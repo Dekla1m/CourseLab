@@ -13,7 +13,29 @@ module kuz_lsx_matrix_comb (
     wire [127:0] data_after_key_xor = data_input ^ key_input;
     wire [127:0] data_after_substitution;
 
-    // Таблица подстановки одного байта. Неопределённый вход распространяет X в симуляции.
+    // Фиксированный срез каждого экземпляра сохраняет порядок байтов.
+    kuz_sbox_comb substitution (
+        .data_input(data_after_key_xor),
+        .data_output(data_after_substitution)
+    );
+
+
+    l_matrix_comb l_transform (
+        .data_input(data_after_substitution),
+        .data_output(data_output)
+    );
+
+endmodule
+
+
+// Прямая подстановка S. Фиксированные срезы сохраняют порядок байтов.
+
+module kuz_sbox_comb (
+    input  [127:0] data_input,
+    output [127:0] data_output
+);
+
+    // Неопределённое значение байта распространяет X в симуляции.
     function automatic [7:0] substitute_byte(input [7:0] byte_input);
         begin
             case (byte_input)
@@ -278,20 +300,11 @@ module kuz_lsx_matrix_comb (
         end
     endfunction
 
-
-    // Фиксированный срез каждого экземпляра сохраняет порядок байтов.
     genvar byte_index;
     generate
-        for (byte_index = 0; byte_index < 16; byte_index = byte_index + 1) begin : byte_substitutions
-            assign data_after_substitution[8 * byte_index +: 8] =
-                substitute_byte(data_after_key_xor[8 * byte_index +: 8]);
+        for (byte_index = 0; byte_index < 16; byte_index = byte_index + 1) begin : bytes
+            assign data_output[8*byte_index +: 8] = substitute_byte(data_input[8*byte_index +: 8]);
         end
     endgenerate
-
-
-    l_matrix_comb l_transform (
-        .data_input(data_after_substitution),
-        .data_output(data_output)
-    );
 
 endmodule

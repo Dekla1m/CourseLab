@@ -1,13 +1,26 @@
 `timescale 1ns / 1ps
 
-// Проверка одного kuz_TOP. Формирователь сообщений заменён готовыми блоками.
+// Проверка одного kuz_TOP. Блоки и готовые наборы ключей подаются из TB.
 
 module tb_kuz_top;
 
-    localparam integer ENC_LATENCY = 10;
-    localparam integer DEC_LATENCY = 10;
+    localparam integer ENC_LATENCY = 37;
+    localparam integer DEC_LATENCY = 37;
 
-    localparam [255:0] KEY = 256'h8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef;
+    localparam [1279:0] RFC_KEYS = {
+        128'h8899aabbccddeeff0011223344556677, 128'hfedcba98765432100123456789abcdef,
+        128'hdb31485315694343228d6aef8cc78c44, 128'h3d4553d8e9cfec6815ebadc40a9ffd04,
+        128'h57646468c44a5e28d3e59246f429f1ac, 128'hbd079435165c6432b532e82834da581b,
+        128'h51e640757e8745de705727265a0098b1, 128'h5a7925017b9fdd3ed72a91a22286f984,
+        128'hbb44e25378c73123a5f32f73cdb6e517, 128'h72e9dd7416bcf45b755dbaa88e4a4043
+    };
+    localparam [1279:0] ZERO_KEYS = {
+        128'h00000000000000000000000000000000, 128'h00000000000000000000000000000000,
+        128'hd7e5947c30b506702a4f8be01e49f157, 128'h374d255d7d0febc6b0205b0ce5916145,
+        128'hc15446aa1feeb6db4806751155e0386e, 128'h718c5e8a75e7186038aeeed50c1fb72d,
+        128'h5bdf9ba55b4668dc436895951b6855cc, 128'h70804dc50f238f839409bcaed4322502,
+        128'h528ba9f04997c2684b01a4944e91c0f1, 128'h491b9222400a7c584f13a7f67a2db897
+    };
 
     // Строка из 22 символов занимает два блока. Второй дополнен 80 hex и нулями.
     localparam [127:0] PLAIN_FIRST = "abcdefghijklmnop";
@@ -21,12 +34,14 @@ module tb_kuz_top;
     reg         rst;
     reg         btn_pulse;
     reg [127:0] data_input;
-    reg [255:0] start_key_input;
-    reg         key_input_valid;
+    reg [1279:0] round_keys_input;
+    reg          round_keys_input_valid;
+    reg          key_update_pending;
     reg         data_input_valid;
     reg         data_input_last;
 
-    wire         key_input_ready;
+    wire         round_keys_input_ready;
+    wire         key_update_allowed;
     wire         round_keys_ready;
     wire         data_input_ready;
     wire [127:0] data_output;
@@ -59,9 +74,11 @@ module tb_kuz_top;
         .btn_pulse(btn_pulse),
 
         .data_input(data_input),
-        .start_key_input(start_key_input),
-        .key_input_valid(key_input_valid),
-        .key_input_ready(key_input_ready),
+        .round_keys_input(round_keys_input),
+        .round_keys_input_valid(round_keys_input_valid),
+        .round_keys_input_ready(round_keys_input_ready),
+        .key_update_pending(key_update_pending),
+        .key_update_allowed(key_update_allowed),
         .round_keys_ready(round_keys_ready),
         .data_input_valid(data_input_valid),
         .data_input_last(data_input_last),
@@ -77,7 +94,7 @@ module tb_kuz_top;
 
     initial begin
         clk = 0;
-        forever #5 clk = ~clk;
+        forever #2.5 clk = ~clk;
     end
 
     // Handshake берётся до обновления регистров, импульсы проверяются после.
@@ -89,7 +106,7 @@ module tb_kuz_top;
             accepted_blocks = accepted_blocks + 1;
         end
 
-        if (!rst && key_input_valid && key_input_ready)
+        if (!rst && round_keys_input_valid && round_keys_input_ready)
             accepted_keys = accepted_keys + 1;
 
         #0.2;
@@ -141,7 +158,8 @@ module tb_kuz_top;
             @(negedge clk);
             rst = 1;
             btn_pulse = 0;
-            key_input_valid = 0;
+            round_keys_input_valid = 0;
+            key_update_pending = 0;
             data_input_valid = 0;
 
             sample_edge;
@@ -154,39 +172,40 @@ module tb_kuz_top;
             rst = 0;
             sample_edge;
             check(data_input_ready === 0 && round_keys_ready === 0 &&
-                  key_input_ready === 1 && data_output_valid === 0 &&
+                  key_update_allowed === 1 && data_output_valid === 0 &&
                   busy_all_message === 0 && switch_mode_pulse === 0,
                   "Core did not return to idle after reset");
         end
     endtask
 
-    task wait_for_keys;
-        integer elapsed;
-        begin
-            for (elapsed = 1; elapsed < 33; elapsed = elapsed + 1) begin
-                sample_edge;
-                check(round_keys_ready === 0 && data_input_ready === 0,
-                      "A block could enter during key preparation");
-            end
-            sample_edge;
-            check(round_keys_ready === 1 && data_input_ready === 1,
-                  "Prepared keys did not open the data input");
-        end
-    endtask
-
-    task load_key;
-        input [255:0] key;
+    task load_keys;
+        input [1279:0] keys;
         integer previous_keys;
         begin
             @(negedge clk);
+            check(key_update_allowed === 1, "Key update is not allowed at idle");
             previous_keys = accepted_keys;
-            start_key_input = key;
-            key_input_valid = 1'b1;
+            key_update_pending = 1'b1;
+
             sample_edge;
-            check(accepted_keys == previous_keys + 1, "Key request was not accepted");
+            check(round_keys_ready === 0 && data_input_ready === 0 &&
+                  round_keys_input_ready === 1 && key_update_allowed === 0,
+                  "Data input opened while waiting for the key set");
+
             @(negedge clk);
-            key_input_valid = 1'b0;
-            wait_for_keys;
+            round_keys_input = keys;
+            round_keys_input_valid = 1'b1;
+            sample_edge;
+            check(accepted_keys == previous_keys + 1 && data_input_ready === 0,
+                  "Key set was not written once while data input was closed");
+
+            @(negedge clk);
+            round_keys_input_valid = 1'b0;
+            key_update_pending = 1'b0;
+            round_keys_input = ~keys;
+            sample_edge;
+            check(round_keys_ready === 1 && data_input_ready === 1,
+                  "Installed keys did not open the data input");
         end
     endtask
 
@@ -331,8 +350,9 @@ module tb_kuz_top;
         rst = 1;
         btn_pulse = 0;
         data_input = 0;
-        start_key_input = 0;
-        key_input_valid = 0;
+        round_keys_input = 0;
+        round_keys_input_valid = 0;
+        key_update_pending = 0;
         data_input_valid = 0;
         data_input_last = 0;
 
@@ -347,7 +367,7 @@ module tb_kuz_top;
 
         begin_test("ENC -> DEC -> ENC, 22 CHARACTERS IN TWO BLOCKS");
         reset_core;
-        load_key(KEY);
+        load_keys(RFC_KEYS);
         run_pair(PLAIN_FIRST, PLAIN_LAST, CIPHER_FIRST, CIPHER_LAST, ENC_LATENCY,
                  first_cipher, last_cipher);
 
@@ -432,7 +452,7 @@ module tb_kuz_top;
                   "Aborted operation or deferred request survived reset");
         end
 
-        load_key(KEY);
+        load_keys(RFC_KEYS);
         run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
         sample_edge;
         check(data_output_valid === 0 && data_input_ready === 1 &&
@@ -445,27 +465,26 @@ module tb_kuz_top;
         begin_test("BLOCK PRIORITY, KEY HELD UNTIL LAST RESULT, NEW CIPHERTEXT");
         @(negedge clk);
         before_accept = accepted_blocks;
-        start_key_input = 0;
-        key_input_valid = 1'b1;
         data_input = PLAIN_FIRST;
         data_input_valid = 1'b1;
         data_input_last = 1'b0;
+
+        // Запрос ожидает снаружи, пока ядро не разрешит запустить расчёт.
+        #0.1;
+        check(key_update_allowed === 0, "A key update could start on the first block edge");
         sample_edge;
         check(accepted_blocks == before_accept + 1 && accepted_keys == 2,
               "Key update took priority over the first block");
         release_input;
         expect_result(CIPHER_FIRST, 1'b0, ENC_LATENCY);
         sample_edge;
-        check(key_input_ready === 0 && accepted_keys == 2 && round_keys_ready === 1,
+        check(key_update_allowed === 0 && accepted_keys == 2 && round_keys_ready === 1,
               "Key accepted in the gap inside the message");
 
         run_block(PLAIN_LAST, CIPHER_LAST, 1'b1, ENC_LATENCY);
-        sample_edge;
-        check(accepted_keys == 3 && round_keys_ready === 0,
-              "Deferred key was not accepted after the last result");
-        @(negedge clk);
-        key_input_valid = 1'b0;
-        wait_for_keys;
+        check(key_update_allowed === 1 && accepted_keys == 2,
+              "The last result did not release the pending update");
+        load_keys(ZERO_KEYS);
         run_block(128'b0, 128'h98cc6b54dbcf7bd2f0800c1fab0677ef, 1'b1, ENC_LATENCY);
         check(accepted_keys == 3 && completed_blocks == 13, "Unexpected block or key count");
         pass_test;

@@ -9,6 +9,7 @@ Starting simulation data flow analysis
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
 Compiling module work.kuz_round_constant
+Compiling module work.kuz_sbox_comb
 Compiling module work.l_matrix_comb
 Compiling module work.kuz_lsx_matrix_comb
 Compiling module work.key_matrix_onecycle

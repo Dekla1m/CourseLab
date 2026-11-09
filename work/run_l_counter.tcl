@@ -1,6 +1,6 @@
 set root [file normalize [file join [file dirname [info script]] ..]]
 open_project [file join $root CourseLab.xpr]
-set source_file [file join $root CourseLab.srcs sources_1 l_matrix_onecycle.v]
+set source_file [file join $root CourseLab.srcs experiments l_matrix_onecycle.v]
 set matrix_file [file join $root CourseLab.srcs sources_1 l_matrix_comb.v]
 if {[llength [get_files -quiet $matrix_file]] == 0} {
     add_files -fileset sources_1 -norecurse $matrix_file

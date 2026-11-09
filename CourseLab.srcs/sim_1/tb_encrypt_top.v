@@ -2,7 +2,7 @@
 
 module tb_encrypt_top;
 
-    localparam integer LATENCY = 10;
+    localparam integer LATENCY = 37;
     localparam [127:0] RFC_PLAIN  = 128'h1122334455667700ffeeddccbbaa9988;
     localparam [127:0] RFC_CIPHER = 128'h7f679d90bebc24305a468d42b9d4edcd;
     localparam [127:0] ZERO_CIPHER = 128'h98cc6b54dbcf7bd2f0800c1fab0677ef;
@@ -86,7 +86,7 @@ module tb_encrypt_top;
 
     initial begin
         clk = 1'b0;
-        forever #5 clk = ~clk;
+        forever #2.5 clk = ~clk;
     end
 
     // Модель интерфейса считает задержку от handshake, включая пустые такты.
@@ -355,15 +355,15 @@ module tb_encrypt_top;
         pass_test;
 
         begin_test("FULL PIPELINE ACCEPTS WHILE PRODUCING A RESULT");
-        // Десять блоков заполняют тракт. Одиннадцатый входит на фронте первого результата.
+        // Заполняем все стадии. Следующий блок входит на фронте первого результата.
         drive_block(PLAIN_FIRST, CIPHER_FIRST, 1'b0);
         repeat (LATENCY - 1)
             drive_block(RFC_PLAIN, RFC_CIPHER, 1'b0);
         drive_block(PLAIN_LAST, CIPHER_LAST, 1'b1);
-        check(accepted_blocks == 18 && completed_blocks == 8 && data_output_valid === 1,
+        check(accepted_blocks == LATENCY + 8 && completed_blocks == 8 && data_output_valid === 1,
               "Input and output did not advance together in the full pipeline");
         idle(LATENCY + 1);
-        check(completed_blocks == 18 && busy_all_message === 0, "Full pipeline did not drain");
+        check(completed_blocks == LATENCY + 8 && busy_all_message === 0, "Full pipeline did not drain");
         pass_test;
 
         begin_test("RESET CANCELS MULTIPLE BLOCKS AND CLEARS LAST");
@@ -376,11 +376,11 @@ module tb_encrypt_top;
         rst = 0;
         data_input_valid = 0;
         repeat (LATENCY + 1) sample_edge;
-        check(accepted_blocks == 20 && completed_blocks == 18,
+        check(accepted_blocks == LATENCY + 10 && completed_blocks == LATENCY + 8,
               "A cancelled block survived reset");
         drive_block(RFC_PLAIN, RFC_CIPHER, 1'b1);
         idle(LATENCY + 1);
-        check(accepted_blocks == 21 && completed_blocks == 19, "Post-reset block count mismatch");
+        check(accepted_blocks == LATENCY + 11 && completed_blocks == LATENCY + 9, "Post-reset block count mismatch");
         pass_test;
 
         $display("\nTESTS PASSED: %0d / %0d", PASSED, TESTS);

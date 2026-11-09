@@ -23,11 +23,13 @@ module kuz_round_pipeline #(
 );
 
     localparam integer ROUNDS = 9;
+    localparam integer ROUND_CYCLES = 4;
+    localparam integer LAST_DELAY = ROUNDS * ROUND_CYCLES;
     localparam integer FINAL_KEY_INDEX = DECRYPT ? 0 : ROUNDS;
 
     reg [127:0] input_data;
     reg         input_valid;
-    reg [ROUNDS:0] stage_last;
+    reg [LAST_DELAY:0] stage_last;
     reg         draining_message; // Закрывает вход от приёма last до его выдачи.
 
     wire [127:0] stage_data [0:ROUNDS];
@@ -47,27 +49,17 @@ module kuz_round_pipeline #(
             localparam integer KEY_INDEX = DECRYPT ? ROUNDS - stage : stage;
             wire [127:0] round_key = round_keys[1279 - 128*KEY_INDEX -: 128];
 
-            if (DECRYPT) begin : inverse
-                data_inverse_matrix_onecycle transform (
-                    .clk(clk),
-                    .rst(rst),
-                    .data_round_enable(stage_valid[stage]),
-                    .data_input(stage_data[stage]),
-                    .key_input(round_key),
-                    .data_output(stage_data[stage+1]),
-                    .data_round_done(stage_valid[stage+1])
-                );
-            end else begin : forward
-                data_matrix_onecycle transform (
-                    .clk(clk),
-                    .rst(rst),
-                    .data_round_enable(stage_valid[stage]),
-                    .data_input(stage_data[stage]),
-                    .key_input(round_key),
-                    .data_output(stage_data[stage+1]),
-                    .data_round_done(stage_valid[stage+1])
-                );
-            end
+            kuz_round_fourcycle #(
+                .DECRYPT(DECRYPT)
+            ) transform (
+                .clk(clk),
+                .rst(rst),
+                .data_round_enable(stage_valid[stage]),
+                .data_input(stage_data[stage]),
+                .key_input(round_key),
+                .data_output(stage_data[stage+1]),
+                .data_round_done(stage_valid[stage+1])
+            );
         end
     endgenerate
 
@@ -87,7 +79,7 @@ module kuz_round_pipeline #(
             input_valid <= data_input_accept;
 
             // Метка проходит те же стадии, что и valid. Пустой слот получает last=0.
-            stage_last <= {stage_last[ROUNDS-1:0], data_input_accept && data_input_last};
+            stage_last <= {stage_last[LAST_DELAY-1:0], data_input_accept && data_input_last};
 
             if (data_input_accept) begin
                 input_data       <= data_input;
@@ -101,9 +93,9 @@ module kuz_round_pipeline #(
 
             if (stage_valid[ROUNDS]) begin
                 data_output      <= stage_data[ROUNDS] ^ round_keys[1279 - 128*FINAL_KEY_INDEX -: 128];
-                data_output_last <= stage_last[ROUNDS];
+                data_output_last <= stage_last[LAST_DELAY];
 
-                if (stage_last[ROUNDS]) begin
+                if (stage_last[LAST_DELAY]) begin
                     draining_message <= 1'b0;
                     busy_all_message <= 1'b0;
                 end

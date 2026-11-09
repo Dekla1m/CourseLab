@@ -1,6 +1,6 @@
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
-tb = (root / "CourseLab.srcs/sim_1/tb.v").read_text(encoding="utf-8")
+tb = (root / "CourseLab.srcs/experiments/tb.v").read_text(encoding="utf-8")
 tb = tb.replace("module tb;", "module tb_iterative;")
 tb = tb.replace("Default 100 MHz; functional latency is also one cycle at other periods.", "Default 100 MHz; functional latency is 16 cycles.")
 tb = tb.replace("wire done;", "wire done;\n    wire busy;")
@@ -13,5 +13,5 @@ tb = tb.replace("last_cycles != 1", "last_cycles != 16")
 tb = tb.replace("Expected one cycle, measured", "Expected 16 cycles, measured")
 tb = tb.replace("MATRIX L:", "ITERATIVE L:")
 tb = tb.replace("latency = 1 cycle.", "latency = 16 cycles.")
-(root / "CourseLab.srcs/sim_1/tb_iterative.v").write_text(tb,encoding="utf-8")
+(root / "CourseLab.srcs/experiments/tb_iterative.v").write_text(tb,encoding="utf-8")
 print("Created tb_iterative: the same four full-L examples and cycle counter.")

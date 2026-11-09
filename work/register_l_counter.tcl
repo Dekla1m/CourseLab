@@ -1,6 +1,6 @@
 set root [file normalize [file join [file dirname [info script]] ..]]
 open_project [file join $root CourseLab.xpr]
-set source_file [file join $root CourseLab.srcs sources_1 l_matrix_onecycle.v]
+set source_file [file join $root CourseLab.srcs experiments l_matrix_onecycle.v]
 set matrix_file [file join $root CourseLab.srcs sources_1 l_matrix_comb.v]
 if {[llength [get_files -quiet $matrix_file]] == 0} {
     add_files -fileset sources_1 -norecurse $matrix_file
@@ -8,11 +8,11 @@ if {[llength [get_files -quiet $matrix_file]] == 0} {
 if {[llength [get_files -quiet $source_file]] == 0} {
     add_files -fileset sources_1 -norecurse $source_file
 }
-set iterative_file [file join $root CourseLab.srcs sources_1 l_iterative_16cycles.v]
+set iterative_file [file join $root CourseLab.srcs experiments l_iterative_16cycles.v]
 if {[llength [get_files -quiet $iterative_file]] == 0} {
     add_files -fileset sources_1 -norecurse $iterative_file
 }
-set iterative_tb [file join $root CourseLab.srcs sim_1 tb_iterative.v]
+set iterative_tb [file join $root CourseLab.srcs experiments tb_iterative.v]
 if {[llength [get_files -quiet $iterative_tb]] == 0} {
     add_files -fileset sim_1 -norecurse $iterative_tb
 }
