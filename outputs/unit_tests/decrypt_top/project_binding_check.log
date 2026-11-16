@@ -1,0 +1,3 @@
+TESTS PASSED: 10 / 10
+ALL PASS: Decrypt_TOP; 10 scenarios; 8 blocks; latency=43
+PROJECT_SIM_PASS: sim_1 uses sources_1; Decrypt_TOP completed 10/10 scenarios

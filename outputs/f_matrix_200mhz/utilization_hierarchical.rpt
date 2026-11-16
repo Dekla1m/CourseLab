@@ -1,0 +1,35 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
+| Date         : Mon Oct 19 18:43:11 2026
+| Host         : kulebyaka running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file C:/Users/cosmo/VivadoProjects/CourseLab/outputs/f_matrix_200mhz/utilization_hierarchical.rpt
+| Design       : f_matrix_benchmark
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Routed
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|        Instance        |        Module       | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| f_matrix_benchmark     |               (top) |       1969 |       1969 |       0 |    0 | 643 |      0 |      0 |          0 |
+|   (f_matrix_benchmark) |               (top) |          0 |          0 |       0 |    0 | 386 |      0 |      0 |          0 |
+|   dut                  |   f_matrix_onecycle |       1969 |       1969 |       0 |    0 | 257 |      0 |      0 |          0 |
+|     (dut)              |   f_matrix_onecycle |          0 |          0 |       0 |    0 | 257 |      0 |      0 |          0 |
+|     datapath           | kuz_lsx_matrix_comb |       1969 |       1969 |       0 |    0 |   0 |      0 |      0 |          0 |
+|       (datapath)       | kuz_lsx_matrix_comb |        384 |        384 |       0 |    0 |   0 |      0 |      0 |          0 |
+|       linear           |       l_matrix_comb |       1589 |       1589 |       0 |    0 |   0 |      0 |      0 |          0 |
++------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+

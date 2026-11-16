@@ -1,0 +1,13 @@
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/cosmo/Desktop/vivad/Xilinx_Windows_Unpacked_2022_2/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe tb_fifo -s test_snapshot -debug typical -generic_top WIDTH=1 -generic_top DEPTH=2 -generic_top WR_HALF=5 -generic_top RD_HALF=5 -generic_top ID=2 
+Multi-threading is on. Using 14 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.FIFO(WORD_SIZE=1,FIFO_DEPTH=2)
+Compiling module work.tb_fifo(WIDTH=1,DEPTH=2,RD_HALF=...
+Built simulation snapshot test_snapshot
