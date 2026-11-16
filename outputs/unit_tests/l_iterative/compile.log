@@ -1,4 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/experiments/l_iterative_16cycles.v" into library work
-INFO: [VRFC 10-311] analyzing module l_iterative_16cycles
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/cosmo/VivadoProjects/CourseLab/CourseLab.srcs/experiments/tb_iterative.v" into library work
-INFO: [VRFC 10-311] analyzing module tb_iterative
